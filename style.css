@@ -1,78 +1,49 @@
 body {
   font-family: Arial;
-  text-align: center;
   background: #111;
   color: white;
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  overflow: hidden; /* prevents whole page scrolling */
+  text-align: center;
 }
 
-.input-row {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-  flex-wrap: wrap;
-  gap: 5px;
+.card {
+  background: #222;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 input, select, button {
   padding: 10px;
-  border: none;
+  margin: 5px;
   border-radius: 5px;
+  border: none;
 }
 
 button {
   background: green;
   color: white;
-  cursor: pointer;
 }
 
-#category-totals {
+.goal {
+  background: #333;
   margin: 10px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* Chart size control */
-canvas {
-  max-width: 90%;
-  height: 150px !important;
-  margin: 10px auto;
-  background: #222;
-  border-radius: 10px;
-}
-
-/* SCROLLABLE LIST */
-ul {
-  padding: 0;
-  max-height: 40vh;
-  overflow-y: auto;
-}
-
-/* Card style */
-li {
-  list-style: none;
-  margin: 8px auto;
-  max-width: 90%;
-  background: #222;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-li.income { border-left: 5px solid #4CAF50; }
-li.expense { border-left: 5px solid #F44336; }
-li.other { border-left: 5px solid #FFC107; }
-
-li button {
-  background: red;
-  padding: 5px;
-  color: white;
+.progress {
+  height: 10px;
+  background: #555;
   border-radius: 5px;
-  cursor: pointer;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #4CAF50;
+  border-radius: 5px;
+}
+
+li {
+  list-style: none;
+  margin: 10px;
 }
