@@ -1,5 +1,3 @@
-// V7 – Trunk Upgrade
-
 let goals = JSON.parse(localStorage.getItem("goals")) || [];
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
@@ -15,8 +13,35 @@ window.onload = function() {
   updateGoalSelect();
   renderDashboard();
   renderTransactions();
-  checkAlerts();
+  attachEventListeners();
 };
+
+// --- EVENT DELEGATION ---
+function attachEventListeners(){
+  // Goal buttons
+  document.getElementById("goal-list").addEventListener("click", e=>{
+    if(e.target.tagName === "BUTTON"){
+      const id = parseInt(e.target.dataset.id);
+      if(e.target.dataset.action==="edit") editGoalPrompt(id);
+      if(e.target.dataset.action==="delete") deleteGoal(id);
+    }
+  });
+  // Transaction buttons
+  document.getElementById("transaction-list").addEventListener("click", e=>{
+    if(e.target.tagName === "BUTTON"){
+      const index = parseInt(e.target.dataset.index);
+      if(e.target.dataset.action==="edit") editTransactionPrompt(index);
+      if(e.target.dataset.action==="delete") deleteTransaction(index);
+    }
+  });
+  // Add buttons
+  document.getElementById("add-goal-btn").onclick = addGoal;
+  document.getElementById("add-transaction-btn").onclick = addTransaction;
+  document.getElementById("export-csv-btn").onclick = exportCSV;
+  document.getElementById("export-json-btn").onclick = exportJSON;
+  document.getElementById("import-json-btn").onclick = importJSON;
+  document.getElementById("search-transactions").oninput = searchTransactions;
+}
 
 // --- GOALS ---
 function addGoal() {
@@ -30,39 +55,53 @@ function addGoal() {
   updateGoalSelect();
 }
 
-function renderGoals() {
+function editGoalPrompt(id){
+  const g = goals.find(g=>g.id===id);
+  if(!g) return;
+  const newName = prompt("New goal name:", g.name);
+  const newAmount = parseFloat(prompt("New target amount:", g.target));
+  const newPriority = prompt("New priority (High/Medium/Low):", g.priority);
+  if(!newName || isNaN(newAmount)) return alert("Invalid input!");
+  g.name = newName; g.target=newAmount; g.priority=newPriority;
+  save();
+  renderGoals();
+  renderDashboard();
+  updateGoalSelect();
+}
+
+function deleteGoal(id){
+  goals = goals.filter(g=>g.id!==id);
+  transactions.forEach(t=>{ if(t.goalId==id) t.goalId=null; });
+  save();
+  renderGoals();
+  renderDashboard();
+  updateGoalSelect();
+}
+
+function renderGoals(){
   const container = document.getElementById("goal-list");
   const dashboardGoals = document.getElementById("dashboard-goals");
   container.innerHTML = "";
   dashboardGoals.innerHTML = "";
   goals.forEach(g=>{
     const percent = ((g.progress/g.target)*100).toFixed(1);
-    const status = calculateGoalStatus(g);
-    const goalCard = `<div class="goal">
-      <h3>${g.name} (${g.priority})</h3>
-      <p>$${g.progress} / $${g.target} — ${status.text}</p>
-      <div class="progress" style="background: rgba(255,255,255,0.2)">
-        <div class="progress-bar" style="width:${percent}%; background:${status.color}"></div>
-      </div>
-      <button onclick="editGoalPrompt(${g.id})">Edit</button>
-      <button onclick="deleteGoal(${g.id})">Delete</button>
-    </div>`;
-    container.innerHTML += goalCard;
-    dashboardGoals.innerHTML += goalCard;
+    container.innerHTML += `
+      <div class="goal">
+        <h3>${g.name} (${g.priority})</h3>
+        <p>$${g.progress} / $${g.target}</p>
+        <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
+        <button data-action="edit" data-id="${g.id}">Edit</button>
+        <button data-action="delete" data-id="${g.id}">Delete</button>
+      </div>`;
+    dashboardGoals.innerHTML += `
+      <div class="goal">
+        <h3>${g.name} (${g.priority})</h3>
+        <p>$${g.progress} / $${g.target}</p>
+        <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
+        <button data-action="edit" data-id="${g.id}">Edit</button>
+        <button data-action="delete" data-id="${g.id}">Delete</button>
+      </div>`;
   });
-}
-
-// --- GOAL STATUS / FORECASTING ---
-function calculateGoalStatus(goal){
-  const start = new Date(goal.startDate);
-  const today = new Date();
-  const daysElapsed = Math.ceil((today - start)/ (1000*60*60*24));
-  const dailyTarget = goal.target / 14; // biweekly
-  const expectedProgress = dailyTarget * daysElapsed;
-  const diff = goal.progress - expectedProgress;
-  if(diff >= dailyTarget) return {text: "Ahead", color: "green"};
-  else if(diff >= 0) return {text: "On Track", color: "yellow"};
-  else return {text: "Behind", color: "red"};
 }
 
 // --- TRANSACTIONS ---
@@ -83,14 +122,56 @@ function addTransaction(){
   renderDashboard();
   renderGoals();
   renderTransactions();
-  checkAlerts();
+}
+
+function editTransactionPrompt(index){
+  const t = transactions[index];
+  const desc = prompt("Description:", t.desc);
+  const amount = parseFloat(prompt("Amount:", t.amount));
+  const category = prompt("Category:", t.category);
+  transactions[index] = {...t, desc, amount, category};
+  save();
+  renderDashboard();
+  renderGoals();
+  renderTransactions();
+}
+
+function deleteTransaction(index){
+  const t = transactions[index];
+  if(t.goalId && t.category==="income"){
+    const goal = goals.find(g=>g.id==t.goalId);
+    if(goal) goal.progress -= t.amount;
+  }
+  transactions.splice(index,1);
+  save();
+  renderDashboard();
+  renderGoals();
+  renderTransactions();
+}
+
+function renderTransactions(){
+  const ul = document.getElementById("transaction-list");
+  ul.innerHTML = "";
+  transactions.forEach((t,i)=>{
+    const li = document.createElement("li");
+    li.innerHTML = `${t.date}: ${t.desc}: $${t.amount} (${t.category}) 
+      <button data-action="edit" data-index="${i}">Edit</button> 
+      <button data-action="delete" data-index="${i}">Delete</button>`;
+    ul.appendChild(li);
+  });
+}
+
+function searchTransactions(){
+  const term = document.getElementById("search-transactions").value.toLowerCase();
+  document.querySelectorAll("#transaction-list li").forEach(li=>{
+    li.style.display = li.innerText.toLowerCase().includes(term) ? "block" : "none";
+  });
 }
 
 // --- DASHBOARD ---
 function renderDashboard(){
   const total = transactions.reduce((a,t)=> t.category==='income'?a+t.amount:t.category==='expense'?a-t.amount:a,0);
   document.getElementById("balance").innerText = `$${total}`;
-
   const activeGoal = goals[0];
   if(activeGoal){
     const remaining = activeGoal.target - activeGoal.progress;
@@ -99,24 +180,19 @@ function renderDashboard(){
   } else document.getElementById("daily-target").innerText="$0";
 }
 
-// --- ALERTS ---
-function checkAlerts(){
-  const alerts = [];
-  goals.forEach(g=>{
-    const status = calculateGoalStatus(g);
-    if(status.text === "Behind") alerts.push(`Goal "${g.name}" is behind schedule!`);
-  });
-  const totalSpent = transactions.filter(t=>t.category==='expense').reduce((a,t)=>a+t.amount,0);
-  const balance = transactions.reduce((a,t)=> t.category==='income'?a+t.amount:t.category==='expense'?a-t.amount:a,0);
-  if(totalSpent > balance) alerts.push("You have overspent!");
-  // Display alerts
-  if(alerts.length>0) alert(alerts.join("\n"));
+// --- GOAL SELECT ---
+function updateGoalSelect(){
+  const select = document.getElementById("goal-select");
+  select.innerHTML = `<option value="">No Goal</option>`;
+  goals.forEach(g=> select.innerHTML += `<option value="${g.id}">${g.name}</option>`);
 }
 
-// --- SAVE ---
+// --- STORAGE / EXPORT / IMPORT ---
 function save(){
   localStorage.setItem("goals", JSON.stringify(goals));
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
 
-// --- (Other V6.3 functions like edit/delete, search, export/import remain unchanged)
+function exportCSV(){alert("CSV export placeholder");}
+function exportJSON(){alert("JSON export placeholder");}
+function importJSON(){alert("JSON import placeholder");}
