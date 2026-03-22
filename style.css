@@ -1,49 +1,93 @@
 body {
-  font-family: Arial;
-  background: #111;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #121212;
   color: white;
+}
+
+header {
+  padding: 20px;
   text-align: center;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .card {
-  background: #222;
-  margin: 10px;
+  background: #1E1E1E;
+  margin: 15px;
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-input, select, button {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
+input, select {
+  width: 90%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 25px;
   border: none;
+  outline: none;
+  font-size: 16px;
 }
 
 button {
-  background: green;
+  padding: 12px 20px;
+  margin-top: 10px;
+  border-radius: 25px;
+  border: none;
+  background: #4CAF50;
   color: white;
+  font-weight: bold;
+  cursor: pointer;
+  width: 90%;
 }
 
-.goal {
-  background: #333;
-  margin: 10px;
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #1E1E1E;
+  padding: 10px 0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
+}
+
+nav button {
+  border-radius: 15px;
   padding: 10px;
-  border-radius: 10px;
+  flex: 1;
+  margin: 0 5px;
+  font-size: 14px;
 }
 
 .progress {
-  height: 10px;
-  background: #555;
-  border-radius: 5px;
+  height: 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 .progress-bar {
-  height: 10px;
-  background: #4CAF50;
-  border-radius: 5px;
+  height: 12px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border-radius: 10px;
+  transition: width 0.3s ease;
 }
 
 li {
   list-style: none;
-  margin: 10px;
+  background: #2A2A2A;
+  margin: 10px 15px;
+  padding: 12px;
+  border-radius: 12px;
 }
