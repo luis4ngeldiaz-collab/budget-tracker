@@ -1,17 +1,12 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
-  padding: 0;
+  padding-bottom: 80px; /* Space for Nav */
   background: #121212;
   color: white;
 }
 
-header {
-  padding: 20px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-}
+header { padding: 20px; text-align: center; }
 
 .card {
   background: #1E1E1E;
@@ -22,72 +17,90 @@ header {
 }
 
 input, select {
-  width: 90%;
+  width: 100%;
   padding: 12px;
   margin: 8px 0;
-  border-radius: 25px;
-  border: none;
-  outline: none;
-  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #2A2A2A;
+  color: white;
+  box-sizing: border-box;
 }
 
 button {
-  padding: 12px 20px;
-  margin-top: 10px;
-  border-radius: 25px;
+  padding: 12px;
+  border-radius: 10px;
   border: none;
   background: #4CAF50;
   color: white;
   font-weight: bold;
   cursor: pointer;
-  width: 90%;
+  transition: opacity 0.2s;
 }
 
-.screen {
-  display: none;
-}
+button:active { opacity: 0.7; }
 
-.screen.active {
-  display: block;
-}
-
+/* Navigation */
 nav {
   position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
-  justify-content: space-around;
   background: #1E1E1E;
   padding: 10px 0;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
+  border-top: 1px solid #333;
 }
 
 nav button {
-  border-radius: 15px;
-  padding: 10px;
   flex: 1;
-  margin: 0 5px;
-  font-size: 14px;
+  background: transparent;
+  margin: 0;
+  font-size: 12px;
 }
 
-.progress {
-  height: 12px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
+/* List Items & Buttons */
+.button-group {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
 }
 
+.button-group button {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.edit-btn { background: #ffa000; }
+.delete-btn { background: #f44336; }
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1E1E1E;
+  margin: 10px 15px;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.t-amount.income { color: #4CAF50; }
+.t-amount.expense { color: #f44336; }
+
+/* Progress Bar */
+.progress {
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
 .progress-bar {
-  height: 12px;
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
-  border-radius: 10px;
+  height: 100%;
+  background: #0072ff;
   transition: width 0.3s ease;
 }
 
-li {
-  list-style: none;
-  background: #2A2A2A;
-  margin: 10px 15px;
-  padding: 12px;
-  border-radius: 12px;
-}
+.screen { display: none; }
+.screen.active { display: block; }
