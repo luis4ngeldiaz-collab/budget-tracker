@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Budget Tracker V3</title>
+  <title>Budget Tracker V4</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -17,9 +18,18 @@
       <option value="other">Other</option>
     </select>
     <button onclick="addTransaction()">Add</button>
+    <button onclick="exportCSV()">Export CSV</button>
   </div>
 
   <h2>Balance: $<span id="balance">0</span></h2>
+
+  <div id="category-totals">
+    Income: $<span id="total-income">0</span> | 
+    Expense: $<span id="total-expense">0</span> | 
+    Other: $<span id="total-other">0</span>
+  </div>
+
+  <canvas id="chart" width="400" height="200"></canvas>
 
   <ul id="list"></ul>
 
