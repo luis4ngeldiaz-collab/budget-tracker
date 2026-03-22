@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Budget Tracker</title>
+  <title>Budget Tracker V3</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <h1>💰 Budget Tracker</h1>
 
-  <input id="desc" placeholder="Description" />
-  <input id="amount" type="number" placeholder="Amount (use - for expense)" />
-  <button onclick="addTransaction()">Add</button>
+  <div class="input-row">
+    <input id="desc" placeholder="Description" />
+    <input id="amount" type="number" placeholder="Amount (use - for expense)" />
+    <select id="category">
+      <option value="income">Income</option>
+      <option value="expense">Expense</option>
+      <option value="other">Other</option>
+    </select>
+    <button onclick="addTransaction()">Add</button>
+  </div>
 
   <h2>Balance: $<span id="balance">0</span></h2>
 
