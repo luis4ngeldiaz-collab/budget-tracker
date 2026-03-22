@@ -10,16 +10,16 @@ window.onload = function() {
 function addTransaction() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
+  const category = document.getElementById("category").value;
 
   if (!desc || isNaN(amount)) return;
 
-  const transaction = { id: Date.now(), desc, amount };
+  const transaction = { id: Date.now(), desc, amount, category };
   transactions.push(transaction);
 
   renderTransaction(transaction);
   updateBalance();
 
-  // Save to local storage
   localStorage.setItem("transactions", JSON.stringify(transactions));
 
   document.getElementById("desc").value = "";
@@ -29,13 +29,8 @@ function addTransaction() {
 function renderTransaction(t) {
   const li = document.createElement("li");
   li.id = t.id;
-  li.innerText = `${t.desc}: $${t.amount}`;
-
-  // Delete button
-  const delBtn = document.createElement("button");
-  delBtn.innerText = "Delete";
-  delBtn.onclick = () => deleteTransaction(t.id);
-  li.appendChild(delBtn);
+  li.className = t.category;
+  li.innerHTML = `${t.desc}: $${t.amount} <button onclick="deleteTransaction(${t.id})">Delete</button>`;
 
   document.getElementById("list").appendChild(li);
 }
