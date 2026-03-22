@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Goal Budget App V6.3 – Strong Roots</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goal Budget App V6.3</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,8 +13,6 @@
 </header>
 
 <div id="screens">
-
-  <!-- DASHBOARD -->
   <div id="dashboard" class="screen active">
     <div class="card">
       <h2>Total Balance</h2>
@@ -25,7 +25,6 @@
     <div id="dashboard-goals"></div>
   </div>
 
-  <!-- GOALS -->
   <div id="goals" class="screen">
     <div class="card">
       <h2>Create Goal</h2>
@@ -41,7 +40,6 @@
     <div id="goal-list"></div>
   </div>
 
-  <!-- TRANSACTIONS -->
   <div id="transactions" class="screen">
     <div class="card">
       <h2>Add Transaction</h2>
@@ -54,25 +52,21 @@
       </select>
       <select id="goal-select"></select>
       <input type="date" id="transaction-date">
-      <input type="file" id="receipt" accept="image/*">
-      <button id="add-transaction-btn">Add</button>
+      <button id="add-transaction-btn">Add Transaction</button>
     </div>
-    <input placeholder="Search transactions" id="search-transactions">
-    <ul id="transaction-list"></ul>
+    <div class="card">
+       <input placeholder="Search transactions..." id="search-transactions">
+       <ul id="transaction-list"></ul>
+    </div>
   </div>
 
-  <!-- SETTINGS -->
   <div id="settings" class="screen">
     <div class="card">
-      <h2>Settings / Backup</h2>
-      <button id="export-csv-btn">Export CSV</button>
-      <button id="import-csv-btn">Import CSV</button>
-      <button id="export-json-btn">Export JSON</button>
-      <input type="file" id="json-import" accept=".json">
-      <button id="import-json-btn">Import JSON</button>
+      <h2>Data Management</h2>
+      <button id="export-json-btn">Export Data (JSON)</button>
+      <button onclick="localStorage.clear(); location.reload();" style="background:#f44336; margin-top:20px;">Clear All Data</button>
     </div>
   </div>
-
 </div>
 
 <nav>
