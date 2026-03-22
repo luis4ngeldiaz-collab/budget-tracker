@@ -1,127 +1,23 @@
-/* GLOBAL STYLES */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  margin: 0;
-  padding-bottom: 90px; /* Prevents nav from covering content */
-  background: #121212;
-  color: #ffffff;
-  line-height: 1.5;
-}
-
-header {
-  padding: 30px 20px;
-  text-align: center;
-  background: linear-gradient(180deg, #1e1e1e 0%, #121212 100%);
-}
-
-h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
-
-/* CARDS & INPUTS */
-.card {
-  background: #1e1e1e;
-  margin: 15px;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-}
-
-input, select {
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  border-radius: 12px;
-  border: 1px solid #333;
-  background: #2a2a2a;
-  color: white;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-/* BUTTONS */
-button {
-  padding: 14px 20px;
-  border-radius: 12px;
-  border: none;
-  background: #4caf50;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.1s, opacity 0.2s;
-}
-
-button:active { transform: scale(0.97); opacity: 0.8; }
-
-/* NAVIGATION */
-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 10px 5px;
-  border-top: 1px solid #333;
-  box-sizing: border-box;
-}
-
-nav button {
-  flex: 1;
-  background: transparent;
-  padding: 10px 5px;
-  margin: 0 2px;
-  font-size: 12px;
-  color: #bbb;
-}
-
-nav button:hover { color: white; }
-
-/* LIST ITEMS & DYNAMIC BUTTONS */
-.button-group {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.button-group button {
-  flex: 1;
-  padding: 10px;
-  font-size: 13px;
-}
-
-/* Color Coding for Actions */
-.edit-btn { background: #ffa000 !important; }
-.delete-btn { background: #f44336 !important; }
-
-li, .goal-item {
-  list-style: none;
-  background: #252525;
-  margin: 10px 0;
-  padding: 16px;
-  border-radius: 14px;
-  border-left: 4px solid #4caf50;
-}
-
-/* PROGRESS BAR */
-.progress {
-  height: 10px;
-  background: #333;
-  border-radius: 5px;
-  margin: 12px 0;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
-  border-radius: 5px;
-  transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* UTILS */
+body { font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 90px; background: #121212; color: white; }
+header { padding: 20px; text-align: center; background: #1E1E1E; }
+.card { background: #1E1E1E; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #2A2A2A; color: white; box-sizing: border-box; }
+button { padding: 12px; border-radius: 10px; border: none; background: #4CAF50; color: white; font-weight: bold; cursor: pointer; }
+.button-group { display: flex; gap: 10px; margin-top: 10px; }
+.button-group button { flex: 1; font-size: 12px; }
+.edit-btn { background: #ffa000; }
+.delete-btn { background: #f44336; }
+nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #1E1E1E; padding: 10px 0; border-top: 1px solid #333; }
+nav button { flex: 1; background: transparent; font-size: 12px; color: #888; }
+.progress { height: 10px; background: #333; border-radius: 5px; margin: 10px 0; }
+.progress-bar { height: 100%; background: #0072ff; border-radius: 5px; transition: width 0.3s; }
+.chart-container { display: flex; justify-content: center; align-items: flex-end; height: 100px; gap: 30px; }
+.chart-column { display: flex; flex-direction: column; align-items: center; height: 100%; width: 30px; }
+.bar { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.5s; }
+.income-bar { background: #4CAF50; }
+.expense-bar { background: #f44336; }
+.transaction-item { display: flex; justify-content: space-between; align-items: center; background: #252525; margin: 10px 0; padding: 12px; border-radius: 10px; }
+.income { color: #4CAF50; }
+.expense { color: #f44336; }
 .screen { display: none; }
-.screen.active { display: block; animation: fadeIn 0.3s ease; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.screen.active { display: block; }
