@@ -5,6 +5,8 @@ body {
   color: white;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  overflow: hidden; /* prevents whole page scrolling */
 }
 
 .input-row {
@@ -27,13 +29,32 @@ button {
   cursor: pointer;
 }
 
-ul {
-  padding: 0;
+#category-totals {
+  margin: 10px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
+/* Chart size control */
+canvas {
+  max-width: 90%;
+  height: 150px !important;
+  margin: 10px auto;
+  background: #222;
+  border-radius: 10px;
+}
+
+/* SCROLLABLE LIST */
+ul {
+  padding: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+/* Card style */
 li {
   list-style: none;
-  margin: 10px auto;
+  margin: 8px auto;
   max-width: 90%;
   background: #222;
   padding: 10px;
@@ -54,18 +75,4 @@ li button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
-}
-
-#category-totals {
-  margin: 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-canvas {
-  max-width: 90%;
-  margin: 20px auto;
-  background: #222;
-  border-radius: 10px;
-  display: block;
 }
