@@ -1,102 +1,81 @@
+let goals = JSON.parse(localStorage.getItem("goals")) || [];
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-let balance = 0;
 
-// Load saved transactions
+// INIT
 window.onload = function() {
-  transactions.forEach(t => renderTransaction(t));
-  updateBalance();
-  updateCategoryTotals();
-  updateChart();
+  renderGoals();
+  updateGoalSelect();
 };
 
+// ADD GOAL
+function addGoal() {
+  const name = document.getElementById("goal-name").value;
+  const amount = parseFloat(document.getElementById("goal-amount").value);
+
+  if (!name || isNaN(amount)) return;
+
+  const goal = { id: Date.now(), name, target: amount, progress: 0 };
+  goals.push(goal);
+
+  save();
+  renderGoals();
+  updateGoalSelect();
+}
+
+// RENDER GOALS
+function renderGoals() {
+  const container = document.getElementById("goals");
+  container.innerHTML = "";
+
+  goals.forEach(g => {
+    const percent = ((g.progress / g.target) * 100).toFixed(1);
+
+    container.innerHTML += `
+      <div class="goal">
+        <h4>${g.name}</h4>
+        <p>$${g.progress} / $${g.target}</p>
+        <div class="progress">
+          <div class="progress-bar" style="width:${percent}%"></div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// UPDATE SELECT
+function updateGoalSelect() {
+  const select = document.getElementById("goal-select");
+  select.innerHTML = `<option value="">No Goal</option>`;
+
+  goals.forEach(g => {
+    select.innerHTML += `<option value="${g.id}">${g.name}</option>`;
+  });
+}
+
+// ADD TRANSACTION
 function addTransaction() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
+  const goalId = document.getElementById("goal-select").value;
 
   if (!desc || isNaN(amount)) return;
 
-  const transaction = { id: Date.now(), desc, amount, category, date: new Date() };
-  transactions.push(transaction);
+  const t = { desc, amount, category, goalId };
+  transactions.push(t);
 
-  renderTransaction(transaction);
-  updateBalance();
-  updateCategoryTotals();
-  updateChart();
+  // ADD TO GOAL
+  if (goalId && category === "income") {
+    const goal = goals.find(g => g.id == goalId);
+    if (goal) goal.progress += amount;
+  }
 
+  save();
+  renderGoals();
+}
+
+// SAVE
+function save() {
+  localStorage.setItem("goals", JSON.stringify(goals));
   localStorage.setItem("transactions", JSON.stringify(transactions));
-
-  document.getElementById("desc").value = "";
-  document.getElementById("amount").value = "";
-}
-
-// Render transaction card
-function renderTransaction(t) {
-  const li = document.createElement("li");
-  li.id = t.id;
-  li.className = t.category;
-  li.innerHTML = `${t.desc}: $${t.amount} <button onclick="deleteTransaction(${t.id})">Delete</button>`;
-  document.getElementById("list").appendChild(li);
-}
-
-function deleteTransaction(id) {
-  transactions = transactions.filter(t => t.id !== id);
-  document.getElementById(id).remove();
-  updateBalance();
-  updateCategoryTotals();
-  updateChart();
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-}
-
-// Update balance
-function updateBalance() {
-  balance = transactions.reduce((acc, t) => acc + t.amount, 0);
-  document.getElementById("balance").innerText = balance;
-}
-
-// Category totals
-function updateCategoryTotals() {
-  const income = transactions.filter(t=>t.category==='income').reduce((a,b)=>a+b.amount,0);
-  const expense = transactions.filter(t=>t.category==='expense').reduce((a,b)=>a+b.amount,0);
-  const other = transactions.filter(t=>t.category==='other').reduce((a,b)=>a+b.amount,0);
-  document.getElementById("total-income").innerText = income;
-  document.getElementById("total-expense").innerText = expense;
-  document.getElementById("total-other").innerText = other;
-}
-
-// Chart.js for income/expense
-let chart = new Chart(document.getElementById('chart'), {
-    type: 'bar',
-    data: {
-        labels: ['Income','Expense','Other'],
-        datasets: [{
-            label: 'Totals',
-            data: [0,0,0],
-            backgroundColor: ['#4CAF50','#F44336','#FFC107']
-        }]
-    },
-    options: { responsive:true, maintainAspectRatio:false }
-});
-
-function updateChart() {
-    chart.data.datasets[0].data = [
-        transactions.filter(t=>t.category==='income').reduce((a,b)=>a+b.amount,0),
-        transactions.filter(t=>t.category==='expense').reduce((a,b)=>a+b.amount,0),
-        transactions.filter(t=>t.category==='other').reduce((a,b)=>a+b.amount,0)
-    ];
-    chart.update();
-}
-
-// Export CSV
-function exportCSV() {
-    let csv = 'Description,Amount,Category,Date\n';
-    transactions.forEach(t => {
-        csv += `${t.desc},${t.amount},${t.category},${t.date}\n`;
-    });
-    const blob = new Blob([csv], {type: 'text/csv'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'budget_tracker.csv';
-    a.click();
 }
