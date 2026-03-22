@@ -32,7 +32,7 @@ function addGoal() {
   const name = document.getElementById("goal-name").value;
   const amount = parseFloat(document.getElementById("goal-amount").value);
   const priority = document.getElementById("goal-priority").value;
-  if (!name || isNaN(amount)) return alert("Fill in all goal fields!");
+  if (!name || isNaN(amount)) return alert("Please enter the goal name and amount.");
   goals.push({ id: Date.now(), name, target: amount, progress: 0, priority });
   document.getElementById("goal-name").value = "";
   document.getElementById("goal-amount").value = "";
@@ -48,8 +48,8 @@ function deleteGoal(id) {
 
 function editGoalPrompt(id) {
   const g = goals.find(g => g.id === id);
-  const newName = prompt("New name:", g.name);
-  const newAmount = parseFloat(prompt("New target:", g.target));
+  const newName = prompt("Goal name:", g.name);
+  const newAmount = parseFloat(prompt("Goal amount:", g.target));
   if (newName && !isNaN(newAmount)) {
     g.name = newName; g.target = newAmount;
     saveAndRefresh();
@@ -61,7 +61,7 @@ function addTransaction() {
   const amount = parseFloat(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
   const goalId = document.getElementById("goal-select").value;
-  if (!desc || isNaN(amount)) return alert("Enter details!");
+  if (!desc || isNaN(amount)) return alert("Enter amount and what it's for.");
   const t = { desc, amount, category, goalId, date: new Date().toLocaleDateString() };
   transactions.push(t);
   if (goalId && category === "income") {
@@ -97,14 +97,20 @@ function renderDashboard() {
   const exp = transactions.filter(t => t.category === 'expense').reduce((a, t) => a + t.amount, 0);
   const total = inc - exp;
   document.getElementById("balance").innerText = `$${total.toLocaleString()}`;
+  
   const max = Math.max(inc, exp, 1);
   document.getElementById("bar-income").style.height = `${(inc / max) * 100}%`;
   document.getElementById("bar-expense").style.height = `${(exp / max) * 100}%`;
-  const margin = inc > 0 ? ((total / inc) * 100).toFixed(0) : 0;
-  document.getElementById("margin-text").innerText = `Profit Margin: ${margin}%`;
+
   if (goals.length > 0) {
-    const rem = goals[0].target - goals[0].progress;
-    document.getElementById("daily-target").innerText = `$${(rem / 14).toFixed(2)} (Next 14 Days)`;
+    const g = goals[0];
+    const rem = g.target - g.progress;
+    const pct = Math.min((g.progress / g.target) * 100, 100).toFixed(0);
+    document.getElementById("savings-pct").innerText = `${pct}% of ${g.name} saved`;
+    document.getElementById("daily-target").innerText = `$${Math.max(0, (rem / 14)).toFixed(2)} / day for 2 wks`;
+  } else {
+    document.getElementById("savings-pct").innerText = "No goals set yet";
+    document.getElementById("daily-target").innerText = "$0";
   }
 }
 
@@ -113,7 +119,7 @@ function renderGoals() {
   let html = "";
   goals.forEach(g => {
     const pct = Math.min((g.progress / g.target) * 100, 100).toFixed(0);
-    html += `<div class="card"><h3>${g.name} (${g.priority})</h3><p>$${g.progress} / $${g.target}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="button-group"><button class="edit-btn" data-action="edit-goal" data-id="${g.id}">Edit</button><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div></div>`;
+    html += `<div class="card"><h3>${g.name}</h3><p>$${g.progress.toLocaleString()} / $${g.target.toLocaleString()}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="button-group"><button class="edit-btn" data-action="edit-goal" data-id="${g.id}">Edit</button><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div></div>`;
   });
   containers.forEach(c => c.innerHTML = html);
 }
@@ -122,14 +128,14 @@ function renderTransactions() {
   const ul = document.getElementById("transaction-list");
   let html = "";
   transactions.forEach((t, i) => {
-    html += `<li class="transaction-item"><div><strong>${t.desc}</strong><br><small>${t.date}</small></div><div class="${t.category}">$${t.amount}</div><button class="delete-btn" data-action="delete-transaction" data-index="${i}">Delete</button></li>`;
+    html += `<li class="transaction-item"><div><strong>${t.desc}</strong><br><small>${t.date}</small></div><div class="${t.category}">${t.category==='income'?'+':'-'}$${t.amount}</div><button class="delete-btn" data-action="delete-transaction" data-index="${i}">Delete</button></li>`;
   });
   ul.innerHTML = html;
 }
 
 function updateGoalSelect() {
   const select = document.getElementById("goal-select");
-  let html = '<option value="">Link to Goal?</option>';
+  let html = '<option value="">Put toward a goal?</option>';
   goals.forEach(g => html += `<option value="${g.id}">${g.name}</option>`);
   select.innerHTML = html;
 }
