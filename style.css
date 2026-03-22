@@ -1,23 +1,54 @@
-body { font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 90px; background: #121212; color: white; }
+/* touch-action: manipulation prevents the 300ms double-tap zoom delay */
+body { 
+  font-family: -apple-system, sans-serif; 
+  margin: 0; 
+  padding-bottom: 90px; 
+  background: #121212; 
+  color: white; 
+  touch-action: manipulation; 
+  user-select: none; /* Prevents text selection during fast tapping */
+}
+
 header { padding: 20px; text-align: center; background: #1E1E1E; }
+
 .card { background: #1E1E1E; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #2A2A2A; color: white; box-sizing: border-box; }
-button { padding: 12px; border-radius: 10px; border: none; background: #4CAF50; color: white; font-weight: bold; cursor: pointer; }
+
+input, select, button { 
+  touch-action: manipulation; 
+  width: 100%; 
+  padding: 12px; 
+  margin: 8px 0; 
+  border-radius: 10px; 
+  border: 1px solid #333; 
+  background: #2A2A2A; 
+  color: white; 
+  box-sizing: border-box; 
+  font-size: 16px;
+}
+
+button { background: #4CAF50; font-weight: bold; cursor: pointer; border: none; }
+
 .button-group { display: flex; gap: 10px; margin-top: 10px; }
 .button-group button { flex: 1; font-size: 12px; }
+
 .edit-btn { background: #ffa000; }
 .delete-btn { background: #f44336; }
+
 nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #1E1E1E; padding: 10px 0; border-top: 1px solid #333; }
-nav button { flex: 1; background: transparent; font-size: 12px; color: #888; }
+nav button { flex: 1; background: transparent; font-size: 12px; color: #888; border: none; }
+
 .progress { height: 10px; background: #333; border-radius: 5px; margin: 10px 0; }
 .progress-bar { height: 100%; background: #0072ff; border-radius: 5px; transition: width 0.3s; }
+
 .chart-container { display: flex; justify-content: center; align-items: flex-end; height: 100px; gap: 30px; }
 .chart-column { display: flex; flex-direction: column; align-items: center; height: 100%; width: 30px; }
 .bar { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.5s; }
 .income-bar { background: #4CAF50; }
 .expense-bar { background: #f44336; }
+
 .transaction-item { display: flex; justify-content: space-between; align-items: center; background: #252525; margin: 10px 0; padding: 12px; border-radius: 10px; }
 .income { color: #4CAF50; }
 .expense { color: #f44336; }
+
 .screen { display: none; }
 .screen.active { display: block; }
