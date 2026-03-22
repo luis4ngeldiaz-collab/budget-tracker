@@ -1,41 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Goal Budget App</title>
+  <title>Goal Budget App V6.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>💰 Goal Tracker</h1>
+<!-- HEADER -->
+<header>
+  <h1>💰 Goal Tracker</h1>
+</header>
 
-<!-- CREATE GOAL -->
-<div class="card">
-  <h3>Create Goal</h3>
-  <input id="goal-name" placeholder="Goal name">
-  <input id="goal-amount" type="number" placeholder="Target amount">
-  <button onclick="addGoal()">Add Goal</button>
+<!-- TABS / SCREENS -->
+<div id="screens">
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="screen active">
+    <div class="card">
+      <h2>Total Balance</h2>
+      <p id="balance">$0</p>
+    </div>
+    <div class="card">
+      <h2>Daily / Biweekly Target</h2>
+      <p id="daily-target">$0</p>
+    </div>
+    <div id="dashboard-goals"></div>
+  </div>
+
+  <!-- GOALS -->
+  <div id="goals" class="screen">
+    <div class="card">
+      <h2>Create Goal</h2>
+      <input id="goal-name" placeholder="Goal name">
+      <input id="goal-amount" type="number" placeholder="Target amount">
+      <button onclick="addGoal()">Add Goal</button>
+    </div>
+    <div id="goal-list"></div>
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div id="transactions" class="screen">
+    <div class="card">
+      <h2>Add Transaction</h2>
+      <input id="desc" placeholder="Description">
+      <input id="amount" type="number" placeholder="Amount">
+      <select id="category">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+        <option value="other">Other</option>
+      </select>
+      <select id="goal-select"></select>
+      <button onclick="addTransaction()">Add</button>
+    </div>
+    <ul id="transaction-list"></ul>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settings" class="screen">
+    <div class="card">
+      <h2>Settings</h2>
+      <button onclick="exportCSV()">Export CSV</button>
+    </div>
+  </div>
+
 </div>
 
-<!-- GOALS LIST -->
-<div id="goals"></div>
-
-<!-- ADD TRANSACTION -->
-<div class="card">
-  <h3>Add Transaction</h3>
-  <input id="desc" placeholder="Description">
-  <input id="amount" type="number" placeholder="Amount">
-  
-  <select id="category">
-    <option value="income">Income</option>
-    <option value="expense">Expense</option>
-  </select>
-
-  <select id="goal-select"></select>
-
-  <button onclick="addTransaction()">Add</button>
-</div>
-
-<ul id="list"></ul>
+<!-- TAB NAV -->
+<nav>
+  <button onclick="switchTab('dashboard')">Dashboard</button>
+  <button onclick="switchTab('goals')">Goals</button>
+  <button onclick="switchTab('transactions')">Transactions</button>
+  <button onclick="switchTab('settings')">Settings</button>
+</nav>
 
 <script src="script.js"></script>
 </body>
