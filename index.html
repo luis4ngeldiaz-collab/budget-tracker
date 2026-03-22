@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Budget Tracker V4</title>
+  <title>Goal Budget App</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <h1>💰 Budget Tracker</h1>
+<h1>💰 Goal Tracker</h1>
 
-  <div class="input-row">
-    <input id="desc" placeholder="Description" />
-    <input id="amount" type="number" placeholder="Amount (use - for expense)" />
-    <select id="category">
-      <option value="income">Income</option>
-      <option value="expense">Expense</option>
-      <option value="other">Other</option>
-    </select>
-    <button onclick="addTransaction()">Add</button>
-    <button onclick="exportCSV()">Export CSV</button>
-  </div>
+<!-- CREATE GOAL -->
+<div class="card">
+  <h3>Create Goal</h3>
+  <input id="goal-name" placeholder="Goal name">
+  <input id="goal-amount" type="number" placeholder="Target amount">
+  <button onclick="addGoal()">Add Goal</button>
+</div>
 
-  <h2>Balance: $<span id="balance">0</span></h2>
+<!-- GOALS LIST -->
+<div id="goals"></div>
 
-  <div id="category-totals">
-    Income: $<span id="total-income">0</span> | 
-    Expense: $<span id="total-expense">0</span> | 
-    Other: $<span id="total-other">0</span>
-  </div>
+<!-- ADD TRANSACTION -->
+<div class="card">
+  <h3>Add Transaction</h3>
+  <input id="desc" placeholder="Description">
+  <input id="amount" type="number" placeholder="Amount">
+  
+  <select id="category">
+    <option value="income">Income</option>
+    <option value="expense">Expense</option>
+  </select>
 
-  <canvas id="chart" width="400" height="200"></canvas>
+  <select id="goal-select"></select>
 
-  <ul id="list"></ul>
+  <button onclick="addTransaction()">Add</button>
+</div>
 
-  <script src="script.js"></script>
+<ul id="list"></ul>
+
+<script src="script.js"></script>
 </body>
 </html>
