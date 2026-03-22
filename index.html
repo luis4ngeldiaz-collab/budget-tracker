@@ -36,7 +36,7 @@
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
       </select>
-      <button onclick="addGoal()">Add Goal</button>
+      <button id="add-goal-btn">Add Goal</button>
     </div>
     <div id="goal-list"></div>
   </div>
@@ -55,9 +55,9 @@
       <select id="goal-select"></select>
       <input type="date" id="transaction-date">
       <input type="file" id="receipt" accept="image/*">
-      <button onclick="addTransaction()">Add</button>
+      <button id="add-transaction-btn">Add</button>
     </div>
-    <input placeholder="Search transactions" id="search-transactions" oninput="searchTransactions()">
+    <input placeholder="Search transactions" id="search-transactions">
     <ul id="transaction-list"></ul>
   </div>
 
@@ -65,11 +65,11 @@
   <div id="settings" class="screen">
     <div class="card">
       <h2>Settings / Backup</h2>
-      <button onclick="exportCSV()">Export CSV</button>
-      <button onclick="importCSV()">Import CSV</button>
-      <button onclick="exportJSON()">Export JSON</button>
+      <button id="export-csv-btn">Export CSV</button>
+      <button id="import-csv-btn">Import CSV</button>
+      <button id="export-json-btn">Export JSON</button>
       <input type="file" id="json-import" accept=".json">
-      <button onclick="importJSON()">Import JSON</button>
+      <button id="import-json-btn">Import JSON</button>
     </div>
   </div>
 
