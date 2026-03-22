@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Goal Budget App V6.2</title>
+  <title>Goal Budget App V6.3 – Strong Roots</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
-  <h1>💰 Goal Tracker</h1>
+  <h1>💰 Goal Tracker V6.3</h1>
 </header>
 
-<!-- TABS / SCREENS -->
 <div id="screens">
 
   <!-- DASHBOARD -->
@@ -33,6 +31,11 @@
       <h2>Create Goal</h2>
       <input id="goal-name" placeholder="Goal name">
       <input id="goal-amount" type="number" placeholder="Target amount">
+      <select id="goal-priority">
+        <option value="High">High Priority</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
       <button onclick="addGoal()">Add Goal</button>
     </div>
     <div id="goal-list"></div>
@@ -50,22 +53,28 @@
         <option value="other">Other</option>
       </select>
       <select id="goal-select"></select>
+      <input type="date" id="transaction-date">
+      <input type="file" id="receipt" accept="image/*">
       <button onclick="addTransaction()">Add</button>
     </div>
+    <input placeholder="Search transactions" id="search-transactions" oninput="searchTransactions()">
     <ul id="transaction-list"></ul>
   </div>
 
   <!-- SETTINGS -->
   <div id="settings" class="screen">
     <div class="card">
-      <h2>Settings</h2>
+      <h2>Settings / Backup</h2>
       <button onclick="exportCSV()">Export CSV</button>
+      <button onclick="importCSV()">Import CSV</button>
+      <button onclick="exportJSON()">Export JSON</button>
+      <input type="file" id="json-import" accept=".json">
+      <button onclick="importJSON()">Import JSON</button>
     </div>
   </div>
 
 </div>
 
-<!-- TAB NAV -->
 <nav>
   <button onclick="switchTab('dashboard')">Dashboard</button>
   <button onclick="switchTab('goals')">Goals</button>
