@@ -46,12 +46,22 @@ function deleteGoal(id) {
   }
 }
 
+function editGoalPrompt(id) {
+  const g = goals.find(g => g.id === id);
+  const newName = prompt("New name:", g.name);
+  const newAmount = parseFloat(prompt("New target:", g.target));
+  if (newName && !isNaN(newAmount)) {
+    g.name = newName; g.target = newAmount;
+    saveAndRefresh();
+  }
+}
+
 function addTransaction() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
   const goalId = document.getElementById("goal-select").value;
-  if (!desc || isNaN(amount)) return alert("Enter description and amount!");
+  if (!desc || isNaN(amount)) return alert("Enter details!");
   const t = { desc, amount, category, goalId, date: new Date().toLocaleDateString() };
   transactions.push(t);
   if (goalId && category === "income") {
@@ -83,35 +93,29 @@ function saveAndRefresh() {
 }
 
 function renderDashboard() {
-  const income = transactions.filter(t => t.category === 'income').reduce((a, t) => a + t.amount, 0);
-  const expense = transactions.filter(t => t.category === 'expense').reduce((a, t) => a + t.amount, 0);
-  const total = income - expense;
-  
+  const inc = transactions.filter(t => t.category === 'income').reduce((a, t) => a + t.amount, 0);
+  const exp = transactions.filter(t => t.category === 'expense').reduce((a, t) => a + t.amount, 0);
+  const total = inc - exp;
   document.getElementById("balance").innerText = `$${total.toLocaleString()}`;
-  
-  const max = Math.max(income, expense, 1);
-  document.getElementById("bar-income").style.height = `${(income / max) * 100}%`;
-  document.getElementById("bar-expense").style.height = `${(expense / max) * 100}%`;
-  
-  const margin = income > 0 ? ((total / income) * 100).toFixed(0) : 0;
+  const max = Math.max(inc, exp, 1);
+  document.getElementById("bar-income").style.height = `${(inc / max) * 100}%`;
+  document.getElementById("bar-expense").style.height = `${(exp / max) * 100}%`;
+  const margin = inc > 0 ? ((total / inc) * 100).toFixed(0) : 0;
   document.getElementById("margin-text").innerText = `Profit Margin: ${margin}%`;
-
   if (goals.length > 0) {
-    const remaining = goals[0].target - goals[0].progress;
-    document.getElementById("daily-target").innerText = `$${(remaining / 14).toFixed(2)} (Next 14 Days)`;
+    const rem = goals[0].target - goals[0].progress;
+    document.getElementById("daily-target").innerText = `$${(rem / 14).toFixed(2)} (Next 14 Days)`;
   }
 }
 
 function renderGoals() {
-  const container = document.getElementById("goal-list");
-  const dashContainer = document.getElementById("dashboard-goals");
+  const containers = [document.getElementById("goal-list"), document.getElementById("dashboard-goals")];
   let html = "";
   goals.forEach(g => {
     const pct = Math.min((g.progress / g.target) * 100, 100).toFixed(0);
     html += `<div class="card"><h3>${g.name} (${g.priority})</h3><p>$${g.progress} / $${g.target}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="button-group"><button class="edit-btn" data-action="edit-goal" data-id="${g.id}">Edit</button><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div></div>`;
   });
-  container.innerHTML = html;
-  dashContainer.innerHTML = html;
+  containers.forEach(c => c.innerHTML = html);
 }
 
 function renderTransactions() {
