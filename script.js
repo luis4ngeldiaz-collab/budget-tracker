@@ -1,12 +1,12 @@
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-let categories = ["Food", "Bills", "Gas", "Personal", "Business"];
+let categories = ["Food & Drinks", "Bills & Rent", "Gas", "Personal", "Work"];
 let currentType = 'expense';
 let startY = 0;
 
 function switchTab(tabId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
-  document.getElementById('header-title').innerText = tabId === 'dashboard' ? 'Summary' : 'History';
+  document.getElementById('header-title').innerText = tabId === 'dashboard' ? 'My Money' : 'History';
 }
 
 function toggleSheet() {
@@ -14,16 +14,22 @@ function toggleSheet() {
   document.getElementById('overlay').classList.toggle('active');
 }
 
-// FIXED: Selection logic for Expense/Income/Invest
+// Logic for clicking Spent / Got Paid / Put Aside
 document.querySelectorAll('.seg-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
     this.classList.add('active');
     currentType = this.getAttribute('data-type');
+    
+    // Change the placeholder based on what they click
+    const descInput = document.getElementById("desc");
+    if (currentType === 'expense') descInput.placeholder = "Where? (Store name)";
+    else if (currentType === 'income') descInput.placeholder = "From who?";
+    else descInput.placeholder = "Saving for what?";
   });
 });
 
-// SWIPE LOGIC
+// Swipe to close
 const handleZone = document.getElementById('sheet-handle-zone');
 const sheet = document.getElementById('action-sheet');
 handleZone.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; sheet.style.transition = 'none'; });
@@ -49,9 +55,15 @@ document.getElementById("add-transaction-btn").onclick = () => {
   const amount = parseFloat(document.getElementById("amount").value);
   if(!desc || isNaN(amount)) return;
   
-  transactions.push({ desc, amount, type: currentType, category: document.getElementById("category-select").value, date: 'Today' });
-  localStorage.setItem("transactions", JSON.stringify(transactions));
+  transactions.push({ 
+    desc, 
+    amount, 
+    type: currentType, 
+    category: document.getElementById("category-select").value, 
+    date: 'Today' 
+  });
   
+  localStorage.setItem("transactions", JSON.stringify(transactions));
   toggleSheet();
   updateUI();
   document.getElementById("desc").value = "";
@@ -63,6 +75,7 @@ function updateUI() {
   const exp = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + t.amount, 0);
   const inv = transactions.filter(t => t.type === 'invest').reduce((a, t) => a + t.amount, 0);
   
+  // Logic: Cash = Money in - Money out - Money saved
   document.getElementById("balance").innerText = `$${(inc - exp - inv).toLocaleString()}`;
   document.getElementById("invested-val").innerText = `$${inv.toLocaleString()}`;
   document.getElementById("net-worth").innerText = `$${(inc - exp).toLocaleString()}`;
