@@ -3,61 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Budget Pro V16</title>
+  <title>Budget Pro Solid</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="app-container">
-  <header><h1 id="header-title">My Money</h1></header>
+  <header><h1>My Money</h1></header>
 
   <div id="screens">
     <div id="dashboard" class="screen active">
-      <div class="ios-card-large">
+      <div class="card-main">
         <small>SAFE TO SPEND</small>
         <h2 id="safe-spend">$0.00</h2>
       </div>
 
-      <div class="section-label">Past 7 Days</div>
-      <div class="ios-card-graph">
-        <div id="bar-chart-container" class="chart-flex"></div>
-        <div class="chart-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+      <div class="label">Weekly Activity</div>
+      <div class="card-graph">
+        <div id="bar-container" class="bar-grid"></div>
+        <div class="bar-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
       </div>
 
-      <div class="section-label">Spending Limits</div>
-      <div id="category-bars"></div>
+      <div class="label">Spending Limits</div>
+      <div id="category-list"></div>
     </div>
 
     <div id="transactions" class="screen">
-      <div class="section-label">All Activity</div>
-      <div id="transaction-list" class="ios-list-container"></div>
+      <div class="label">All History</div>
+      <div id="history-list" class="list-container"></div>
     </div>
   </div>
 
-  <div id="overlay" onclick="toggleSheet()"></div>
-  <div id="action-sheet" class="ios-sheet">
-    <div class="sheet-handle" onclick="toggleSheet()"></div>
-    <div class="sheet-content">
-      <h3 class="sheet-title">New Entry</h3>
-      
-      <div class="ios-segment-control">
-        <button id="btn-exp" class="seg-btn active" onclick="pickType('expense')">Spent</button>
-        <button id="btn-inc" class="seg-btn" onclick="pickType('income')">Earned</button>
-        <button id="btn-inv" class="seg-btn" onclick="pickType('invest')">Saved</button>
+  <div id="overlay" onclick="closeSheet()"></div>
+  <div id="add-sheet" class="bottom-sheet">
+    <div class="handle" onclick="closeSheet()"></div>
+    <div class="sheet-body">
+      <h3>New Entry</h3>
+      <div class="type-picker">
+        <button id="btn-exp" class="choice active" onclick="setType('expense')">Spent</button>
+        <button id="btn-inc" class="choice" onclick="setType('income')">Earned</button>
       </div>
-
-      <input id="desc" placeholder="Where? (Store name)" class="ios-input">
-      <input id="amount" type="number" placeholder="0.00" class="ios-input">
-      <select id="category-select" class="ios-input"></select>
-
-      <button onclick="saveEntry()" class="ios-main-btn">Save to List</button>
+      <input id="desc" placeholder="Where? (Store name)" class="ios-in">
+      <input id="amount" type="number" placeholder="0.00" class="ios-in">
+      <select id="cat-select" class="ios-in"></select>
+      <button onclick="saveNow()" class="save-btn">Save Entry</button>
     </div>
   </div>
 
-  <nav class="ios-tab-bar">
-    <button onclick="switchTab('dashboard')"><i>🏠</i><span>Home</span></button>
-    <button onclick="toggleSheet()" class="add-tab"><i>+</i></button>
-    <button onclick="switchTab('transactions')"><i>🕒</i><span>History</span></button>
+  <nav class="tab-bar">
+    <button onclick="showScreen('dashboard')">Home</button>
+    <button onclick="openSheet()" class="plus-btn">+</button>
+    <button onclick="showScreen('transactions')">History</button>
   </nav>
 </div>
 
