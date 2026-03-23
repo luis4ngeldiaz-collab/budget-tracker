@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Budget Pro V12</title>
+  <title>Budget Pro V13</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,17 +19,22 @@
         <small>NET WORTH</small>
         <h2 id="net-worth">$0.00</h2>
         <div class="ios-stats-grid">
-          <div><label>CASH</label><span id="balance">$0</span></div>
-          <div><label>GROWTH</label><span id="invested-val" style="color:#0A84FF;">$0</span></div>
+          <div class="stat-item"><label>CASH</label><span id="balance">$0</span></div>
+          <div class="stat-item"><label>GROWTH</label><span id="invested-val" style="color:#0A84FF;">$0</span></div>
         </div>
       </div>
-      <div class="section-label">Budget Health</div>
+      
+      <div class="section-header">
+        <span class="section-label">Budget Health</span>
+      </div>
       <div id="category-bars" class="ios-list-container"></div>
     </div>
 
     <div id="transactions" class="screen">
-      <div class="section-label">All Activity</div>
-      <div id="transaction-list" class="ios-list-container"></div>
+      <div class="section-header">
+        <span class="section-label">All Activity</span>
+      </div>
+      <div id="transaction-list" class="ios-list-container no-bg"></div>
     </div>
   </div>
 
@@ -41,24 +46,29 @@
     </div>
     <div class="sheet-content">
       <h3 class="sheet-title">New Entry</h3>
-      <input id="desc" placeholder="Merchant" class="ios-input">
-      <input id="amount" type="number" placeholder="$0.00" class="ios-input">
       
       <div class="ios-segment-control">
-        <button class="seg-btn active" onclick="setType('expense', this)">Expense</button>
-        <button class="seg-btn" onclick="setType('income', this)">Income</button>
-        <button class="seg-btn" onclick="setType('invest', this)">Invest</button>
+        <button type="button" class="seg-btn active" data-type="expense">Expense</button>
+        <button type="button" class="seg-btn" data-type="income">Income</button>
+        <button type="button" class="seg-btn" data-type="invest">Invest</button>
       </div>
 
-      <select id="category-select" class="ios-input"></select>
-      <button id="add-transaction-btn" class="ios-main-btn">Save</button>
-      <div style="height: 60px;"></div>
+      <div class="input-stack">
+        <input id="desc" placeholder="Merchant or Source" class="ios-input">
+        <input id="amount" type="number" placeholder="0.00" class="ios-input amount-input">
+        <select id="category-select" class="ios-input"></select>
+      </div>
+
+      <button id="add-transaction-btn" class="ios-main-btn">Save Entry</button>
+      <div style="height: 80px;"></div>
     </div>
   </div>
 
   <nav class="ios-tab-bar">
     <button onclick="switchTab('dashboard')"><div class="nav-icon home"></div><span>Summary</span></button>
-    <button onclick="toggleSheet()" class="add-tab"><div class="nav-icon plus"></div></button>
+    <div class="add-btn-container" onclick="toggleSheet()">
+        <div class="plus-circle"></div>
+    </div>
     <button onclick="switchTab('transactions')"><div class="nav-icon clock"></div><span>History</span></button>
   </nav>
 </div>
