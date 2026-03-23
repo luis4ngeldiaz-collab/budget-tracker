@@ -41,15 +41,14 @@
   <div id="goals" class="screen">
     <div class="card">
       <h3>Category Needs (Monthly Caps)</h3>
-      <p style="font-size:10px; color:#666;">Set limits for your "Pruning Tool" here.</p>
-      <div id="cap-inputs">
-        </div>
-      <button onclick="saveCaps()" style="background:#333;">Update Budget Caps</button>
+      <p style="font-size:10px; color:#666; margin-bottom:10px;">Set monthly limits for your pruning tool.</p>
+      <div id="cap-inputs"></div>
+      <button onclick="saveCaps()" style="background:#333; margin-top:10px;">Update Budget Caps</button>
     </div>
     <div class="card">
       <h3>Savings Goals</h3>
-      <input id="goal-name" placeholder="Goal (e.g. House)">
-      <input id="goal-amount" type="number" placeholder="Target ($)">
+      <input id="goal-name" placeholder="Goal Name (e.g. Car)">
+      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
       <button id="add-goal-btn">Set Goal</button>
       <div id="goal-list"></div>
     </div>
@@ -77,7 +76,7 @@
       <button id="add-transaction-btn">Add Log</button>
     </div>
     <div class="card">
-       <input placeholder="Search..." id="search-transactions">
+       <input placeholder="Search transactions..." id="search-transactions">
        <ul id="transaction-list"></ul>
     </div>
   </div>
