@@ -1,52 +1,59 @@
-let selectedCat = "Other";
-const quickCats = [
-    {n: "Food", i: "🍔"}, {n: "Gas", i: "⛽"}, 
-    {n: "Bills", i: "📄"}, {n: "Shop", i: "🛒"}, 
-    {n: "Work", i: "💼"}, {n: "Fun", i: "🎲"}
-];
+let logs = JSON.parse(localStorage.getItem("money_logs")) || [];
+let currentType = 'expense';
+let selectedTag = 'Other';
+const tags = ["🍔 Food", "⛽ Gas", "🏠 Bills", "🛒 Shop", "💼 Work"];
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function openSheet() {
+    document.getElementById('add-sheet').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+}
+
+function closeSheet() {
+    document.getElementById('add-sheet').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+}
 
 function setType(t) {
-    mode = t;
+    currentType = t;
     document.getElementById('btn-exp').classList.toggle('active', t === 'expense');
     document.getElementById('btn-inc').classList.toggle('active', t === 'income');
 }
 
-// Renders the tappable bubbles
-function renderTags() {
-    const container = document.getElementById('tag-container');
-    container.innerHTML = quickCats.map(c => `
-        <div class="tag ${selectedCat === c.n ? 'active' : ''}" onclick="selectTag('${c.n}')">
-            ${c.i} ${c.n}
-        </div>
-    `).join('');
-}
-
-function selectTag(name) {
-    selectedCat = name;
-    renderTags();
-}
-
 function saveNow() {
-    const d = document.getElementById('desc').value || selectedCat;
-    const a = parseFloat(document.getElementById('amount').value);
-    const n = document.getElementById('note').value;
-    const dt = document.getElementById('entry-date').value || new Date().toLocaleDateString();
-
-    if(isNaN(a)) return alert("Enter an amount!");
-
-    data.push({ d, a, mode, c: selectedCat, note: n, date: dt });
-    localStorage.setItem("logs", JSON.stringify(data));
+    const amt = parseFloat(document.getElementById('amount').value);
+    const desc = document.getElementById('desc').value || selectedTag;
     
-    // Reset Form
-    document.getElementById('desc').value = "";
+    if(isNaN(amt)) return alert("Enter an amount!");
+
+    logs.push({ amt, desc, type: currentType, tag: selectedTag, date: new Date().toLocaleDateString() });
+    localStorage.setItem("money_logs", JSON.stringify(logs));
+    
     document.getElementById('amount').value = "";
-    document.getElementById('note').value = "";
+    document.getElementById('desc').value = "";
     closeSheet();
-    refresh();
+    update();
+}
+
+function update() {
+    const spent = logs.filter(l => l.type === 'expense').reduce((s, l) => s + l.amt, 0);
+    const earned = logs.filter(l => l.type === 'income').reduce((s, l) => s + l.amt, 0);
+    document.getElementById('safe-spend').innerText = `$${(earned - spent).toLocaleString()}`;
+    
+    document.getElementById('history-list').innerHTML = logs.map(l => `
+        <div style="background:#1C1C1E; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
+            <span>${l.desc}</span>
+            <b style="color:${l.type==='expense'?'#FF453A':'#30D158'}">${l.type==='expense'?'-':'+'}$${l.amt}</b>
+        </div>
+    `).reverse().join('');
 }
 
 window.onload = () => {
-    document.getElementById('entry-date').valueAsDate = new Date();
-    renderTags();
-    refresh();
+    const tagBox = document.getElementById('tag-container');
+    tagBox.innerHTML = tags.map(t => `<div class="tag" onclick="selectedTag='${t}'; this.parentElement.querySelectorAll('.tag').forEach(x=>x.classList.remove('active')); this.classList.add('active')">${t}</div>`).join('');
+    update();
 };
