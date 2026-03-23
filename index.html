@@ -1,27 +1,68 @@
-<div id="add-sheet" class="bottom-sheet">
-    <div class="handle" onclick="closeSheet()"></div>
-    <div class="sheet-body">
-      <h3 class="sheet-title">New Entry</h3>
-      
-      <div class="type-picker">
-        <button id="btn-exp" class="choice active" onclick="setType('expense')">Spent</button>
-        <button id="btn-inc" class="choice" onclick="setType('income')">Earned</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Budget Pro Fix</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+
+<div id="app-wrapper">
+  <header><h1>My Money</h1></header>
+
+  <div id="main-content">
+    <div id="dashboard" class="screen active">
+      <div class="main-card">
+        <small>SAFE TO SPEND</small>
+        <h2 id="safe-spend">$0.00</h2>
       </div>
 
-      <div class="input-group">
-        <input id="amount" type="number" placeholder="$0.00" class="ios-in amount-large">
-        <input id="desc" placeholder="Where? (e.g. Walmart)" class="ios-in">
+      <div class="label-heading">Weekly View</div>
+      <div class="chart-box">
+        <div id="bar-container" class="bars"></div>
+        <div class="bar-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
       </div>
 
-      <div class="label-small">Category</div>
-      <div class="quick-tags" id="tag-container">
-          </div>
-
-      <div class="label-small">Extra Info (Optional)</div>
-      <input id="note" placeholder="Any notes?" class="ios-in-small">
-      <input id="entry-date" type="date" class="ios-in-small">
-
-      <button onclick="saveNow()" class="save-btn">Add to My Money</button>
-      <div style="height: 30px;"></div>
+      <div class="label-heading">Spending Limits</div>
+      <div id="category-list"></div>
     </div>
+
+    <div id="transactions" class="screen">
+      <div class="label-heading">History</div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <div id="overlay" onclick="closeSheet()"></div>
+  
+  <div id="add-sheet" class="sheet">
+    <div class="sheet-handle" onclick="closeSheet()"></div>
+    <div class="sheet-padding">
+      <h3 class="center">New Entry</h3>
+      
+      <div class="toggle-row">
+        <button id="btn-exp" class="t-btn active" onclick="setType('expense')">Spent</button>
+        <button id="btn-inc" class="t-btn" onclick="setType('income')">Earned</button>
+      </div>
+
+      <input id="amount" type="number" placeholder="$0.00" class="big-input">
+      <input id="desc" placeholder="Where? (e.g. Walmart)" class="std-input">
+      
+      <div class="label-mini">Category</div>
+      <div id="tag-container" class="tag-grid"></div>
+
+      <button onclick="saveNow()" class="action-btn">Save Entry</button>
+    </div>
+  </div>
+
+  <nav class="footer-nav">
+    <button onclick="showScreen('dashboard')">Home</button>
+    <button onclick="openSheet()" class="mid-btn">+</button>
+    <button onclick="showScreen('transactions')">History</button>
+  </nav>
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
