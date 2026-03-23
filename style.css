@@ -1,28 +1,17 @@
 body { font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; background: #000; color: #fff; }
-header { padding: 10px; text-align: center; border-bottom: 1px solid #111; }
-h1 { font-size: 12px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-.card { background: #080808; border: 1px solid #111; margin: 8px; padding: 12px; border-radius: 10px; }
-.mini-card h2 { margin: 0; font-size: 32px; color: #4CAF50; text-align: center; }
-.status-row { display: flex; justify-content: space-around; margin-top: 10px; font-size: 10px; color: #666; }
-.chart-container { display: flex; justify-content: space-around; align-items: flex-end; height: 50px; margin-top: 10px; }
-.chart-column { display: flex; flex-direction: column; align-items: center; width: 40px; }
-.bar { width: 100%; border-radius: 2px 2px 0 0; transition: height 0.5s; }
-.income-bar { background: #4CAF50; } .expense-bar { background: #ff4444; }
-.chart-column span { font-size: 9px; color: #333; margin-top: 4px; }
-.tag-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-.tag { background: #111; padding: 4px 10px; border-radius: 15px; font-size: 11px; border: 1px solid #222; }
-.tag span { margin-left: 5px; color: #f44336; }
-input, select, button, textarea { width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: 1px solid #222; background: #111; color: #fff; font-size: 13px; box-sizing: border-box; }
-textarea { height: 50px; resize: none; font-family: inherit; }
-button { background: #4CAF50; font-weight: bold; border: none; }
-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; border-top: 1px solid #111; padding: 8px 0; }
-nav button { flex: 1; background: transparent; color: #444; font-size: 10px; font-weight: normal; }
-.progress { height: 4px; background: #111; border-radius: 2px; flex: 1; margin: 0 10px; overflow: hidden; }
-.progress-bar { height: 100%; background: #4CAF50; }
-.cat-row { display: flex; align-items: center; font-size: 10px; margin-bottom: 8px; }
-.cat-row span { width: 55px; color: #555; }
-.t-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #111; }
+header { padding: 15px; text-align: center; color: #444; font-size: 10px; text-transform: uppercase; }
+.card { background: #080808; border: 1px solid #111; margin: 10px; padding: 15px; border-radius: 12px; }
+.mini-card h2 { margin: 5px 0; font-size: 32px; color: #0072ff; text-align: center; }
+.status-row { display: flex; justify-content: space-around; font-size: 11px; color: #555; margin-top: 10px; }
+.horizontal-scroll { display: flex; overflow-x: auto; padding: 10px; gap: 10px; scroll-snap-type: x mandatory; }
+.goal-card { min-width: 140px; height: 180px; background-size: cover; background-position: center; border-radius: 15px; flex-shrink: 0; display: flex; align-items: flex-end; padding: 10px; box-sizing: border-box; scroll-snap-align: start; }
+.goal-info { width: 100%; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; }
+input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; box-sizing: border-box; }
+button { background: #0072ff; font-weight: bold; border: none; }
+nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; border-top: 1px solid #111; padding: 10px 0; }
+nav button { flex: 1; background: transparent; color: #444; font-size: 10px; }
+.t-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #111; }
 .income { color: #4CAF50; } .expense { color: #ff4444; } .invest { color: #0072ff; }
-.del-small { width: 20px; padding: 0; background: none; color: #222; font-size: 14px; }
-.split-row { display: flex; gap: 8px; }
 .screen { display: none; } .screen.active { display: block; }
+.split-row { display: flex; justify-content: space-between; align-items: center; }
+.del-small { font-size: 10px; background: #1a1a1a; padding: 5px; color: #555; }
