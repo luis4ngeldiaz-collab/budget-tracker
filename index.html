@@ -3,91 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dad's Budget Tracker V6.6</title>
+  <title>Budget Pro V6.8</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <h1>💰 Dad's Goal Tracker</h1>
+  <h1>Budget Pro</h1>
 </header>
 
 <div id="screens">
   <div id="dashboard" class="screen active">
-    <div class="card main-balance">
-      <h2>Total Savings</h2>
-      <p id="balance">$0</p>
-      <small id="savings-pct">0% of primary goal reached</small>
+    <div class="card mini-card">
+      <small>Available Balance</small>
+      <h2 id="balance">$0</h2>
     </div>
     
     <div class="card">
-      <h2>Cash Flow (In vs. Out)</h2>
+      <h3>Spending by Category</h3>
+      <div id="category-bars" class="category-stats">
+        </div>
+    </div>
+
+    <div class="card">
+      <h3>Cash Flow</h3>
       <div class="chart-container">
         <div class="chart-column">
           <div id="bar-income" class="bar income-bar" style="height: 0%"></div>
-          <span>Job/In</span>
+          <span>Income</span>
         </div>
         <div class="chart-column">
           <div id="bar-expense" class="bar expense-bar" style="height: 0%"></div>
-          <span>Bills/Out</span>
+          <span>Expense</span>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>Daily Savings Target</h2>
-      <p id="daily-target">$0</p>
-    </div>
     <div id="dashboard-goals"></div>
   </div>
 
   <div id="goals" class="screen">
     <div class="card">
-      <h2>Set a Savings Goal</h2>
-      <input id="goal-name" placeholder="e.g., Emergency Fund">
-      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
-      <select id="goal-priority">
-        <option value="High">High Priority</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select>
-      <button id="add-goal-btn">Set Goal</button>
+      <h3>New Goal</h3>
+      <input id="goal-name" placeholder="Name (e.g. Travel)">
+      <input id="goal-amount" type="number" placeholder="Target ($)">
+      <button id="add-goal-btn">Save Goal</button>
     </div>
     <div id="goal-list"></div>
   </div>
 
   <div id="transactions" class="screen">
     <div class="card">
-      <h2>Add Money or Bill</h2>
-      <input id="desc" placeholder="Description (e.g., Weekly Pay)">
+      <h3>Log Activity</h3>
+      <input id="desc" placeholder="Description">
       <input id="amount" type="number" placeholder="Amount ($)">
-      <select id="category">
-        <option value="income">Job / Income</option>
-        <option value="expense">Bill / Expense</option>
+      <select id="type-select">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <select id="category-select">
+        <option value="General">General</option>
+        <option value="Bills">Bills</option>
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Fun">Fun</option>
       </select>
       <select id="goal-select"></select>
-      <input type="date" id="transaction-date">
-      <button id="add-transaction-btn">Add Transaction</button>
+      <button id="add-transaction-btn">Add Log</button>
     </div>
     <div class="card">
-       <input placeholder="Search transactions..." id="search-transactions">
+       <input placeholder="Search..." id="search-transactions">
        <ul id="transaction-list"></ul>
     </div>
   </div>
 
   <div id="settings" class="screen">
     <div class="card">
-      <h2>App Settings</h2>
-      <button onclick="localStorage.clear(); location.reload();" style="background:#f44336; width:100%;">Wipe All Data</button>
+      <h3>System</h3>
+      <button onclick="localStorage.clear(); location.reload();" style="background:#444;">Reset App</button>
     </div>
   </div>
 </div>
 
 <nav>
-  <button onclick="switchTab('dashboard')">Home</button>
+  <button onclick="switchTab('dashboard')">Dash</button>
   <button onclick="switchTab('goals')">Goals</button>
-  <button onclick="switchTab('transactions')">Add Log</button>
-  <button onclick="switchTab('settings')">Settings</button>
+  <button onclick="switchTab('transactions')">Logs</button>
+  <button onclick="switchTab('settings')">Set</button>
 </nav>
 
 <script src="script.js"></script>
