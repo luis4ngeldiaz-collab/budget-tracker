@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Budget Pro V7.1</title>
+  <title>Budget Pro V7.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,43 +15,44 @@
 <div id="screens">
   <div id="dashboard" class="screen active">
     <div class="card mini-card">
-      <small>Available Balance</small>
-      <h2 id="balance">$0</h2>
+      <small>Safe to Spend</small>
+      <h2 id="safe-spend">$0</h2>
       <div class="status-row">
-        <small>Pending: <span id="pending-val">$0</span></small>
-        <small>Burn: <span id="burn-rate">$0</span>/day</small>
+        <small>Bank: <span id="balance">$0</span></small>
+        <small>Invested: <span id="invested-val" style="color:#0072ff;">$0</span></small>
       </div>
     </div>
     
     <div class="card">
-      <h3>Spending Breakdown</h3>
+      <h3>Budget Caps (Pruning)</h3>
       <div id="category-bars" class="category-stats"></div>
     </div>
 
     <div class="card">
       <h3>Cash Flow</h3>
       <div class="chart-container">
-        <div class="chart-column">
-          <div id="bar-income" class="bar income-bar"></div>
-          <span>In</span>
-        </div>
-        <div class="chart-column">
-          <div id="bar-expense" class="bar expense-bar"></div>
-          <span>Out</span>
-        </div>
+        <div class="chart-column"><div id="bar-income" class="bar income-bar"></div><span>In</span></div>
+        <div class="chart-column"><div id="bar-expense" class="bar expense-bar"></div><span>Out</span></div>
+        <div class="chart-column"><div id="bar-invest" class="bar invest-bar"></div><span>Grow</span></div>
       </div>
     </div>
-    <div id="dashboard-goals"></div>
   </div>
 
   <div id="goals" class="screen">
     <div class="card">
-      <h3>New Goal</h3>
-      <input id="goal-name" placeholder="Goal Name">
-      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
-      <button id="add-goal-btn">Set Goal</button>
+      <h3>Category Needs (Monthly Caps)</h3>
+      <p style="font-size:10px; color:#666;">Set limits for your "Pruning Tool" here.</p>
+      <div id="cap-inputs">
+        </div>
+      <button onclick="saveCaps()" style="background:#333;">Update Budget Caps</button>
     </div>
-    <div id="goal-list"></div>
+    <div class="card">
+      <h3>Savings Goals</h3>
+      <input id="goal-name" placeholder="Goal (e.g. House)">
+      <input id="goal-amount" type="number" placeholder="Target ($)">
+      <button id="add-goal-btn">Set Goal</button>
+      <div id="goal-list"></div>
+    </div>
   </div>
 
   <div id="transactions" class="screen">
@@ -61,49 +62,31 @@
       <input id="amount" type="number" placeholder="Amount ($)">
       <div class="split-row">
         <select id="type-select">
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="income">Income (Job)</option>
+          <option value="expense">Expense (Bill)</option>
+          <option value="invest">Investment (Grow)</option>
         </select>
-        <select id="status-select">
-          <option value="cleared">Cleared</option>
-          <option value="pending">Pending</option>
+        <select id="category-select">
+          <option value="Food">Food</option>
+          <option value="Bills">Bills</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Personal">Personal</option>
         </select>
       </div>
-      <select id="category-select">
-        <option value="General">General</option>
-        <option value="Bills">Bills</option>
-        <option value="Food">Food</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Inventory">Inventory</option>
-      </select>
       <select id="goal-select"></select>
       <button id="add-transaction-btn">Add Log</button>
     </div>
     <div class="card">
-       <input placeholder="Search transactions..." id="search-transactions">
+       <input placeholder="Search..." id="search-transactions">
        <ul id="transaction-list"></ul>
-    </div>
-  </div>
-
-  <div id="settings" class="screen">
-    <div class="card">
-      <h3>Data Backup</h3>
-      <p style="font-size:11px; color:#888; margin-bottom:10px;">Copy this code to save your data, or paste a code to restore it.</p>
-      <textarea id="backup-box" placeholder="Your backup code will appear here..." readonly></textarea>
-      <button onclick="generateBackup()" style="background:#333; margin-bottom:5px;">Generate Backup Code</button>
-      <button onclick="restoreBackup()" style="background:#333;">Restore from Code</button>
-    </div>
-    <div class="card">
-      <button onclick="if(confirm('Wipe everything?')) {localStorage.clear(); location.reload();}" style="background:#f44336;">Reset App</button>
     </div>
   </div>
 </div>
 
 <nav>
   <button onclick="switchTab('dashboard')">Dash</button>
-  <button onclick="switchTab('goals')">Goals</button>
+  <button onclick="switchTab('goals')">Setup</button>
   <button onclick="switchTab('transactions')">Logs</button>
-  <button onclick="switchTab('settings')">Set</button>
 </nav>
 
 <script src="script.js"></script>
