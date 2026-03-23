@@ -1,5 +1,5 @@
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-let categories = ["Food", "Bills", "Gas", "Personal", "Health"];
+let categories = ["Food", "Bills", "Gas", "Personal", "Health", "Business"];
 let currentType = 'expense';
 
 function switchTab(tabId) {
@@ -10,6 +10,7 @@ function switchTab(tabId) {
 
 function toggleSheet() {
   document.getElementById('action-sheet').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('active');
 }
 
 function setType(type, btn) {
@@ -29,12 +30,11 @@ document.getElementById("add-transaction-btn").onclick = () => {
   const amount = parseFloat(document.getElementById("amount").value);
   if(!desc || isNaN(amount)) return;
   
-  transactions.push({ desc, amount, type: currentType, category: document.getElementById("category-select").value, date: 'Today' });
+  transactions.push({ desc, amount, type: currentType, category: document.getElementById("category-select").value, date: new Date().toLocaleDateString() });
   localStorage.setItem("transactions", JSON.stringify(transactions));
   
   toggleSheet();
   updateUI();
-  // Reset inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
 };
@@ -43,8 +43,8 @@ function updateUI() {
   const inc = transactions.filter(t => t.type === 'income').reduce((a, t) => a + t.amount, 0);
   const exp = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + t.amount, 0);
   const inv = transactions.filter(t => t.type === 'invest').reduce((a, t) => a + t.amount, 0);
+  
   const cash = inc - exp - inv;
-
   document.getElementById("balance").innerText = `$${cash.toLocaleString()}`;
   document.getElementById("invested-val").innerText = `$${inv.toLocaleString()}`;
   document.getElementById("net-worth").innerText = `$${(cash + inv).toLocaleString()}`;
