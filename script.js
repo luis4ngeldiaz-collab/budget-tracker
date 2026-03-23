@@ -1,64 +1,52 @@
-let data = JSON.parse(localStorage.getItem("logs")) || [];
-let cats = ["Food", "Bills", "Gas", "Fun"];
-let mode = 'expense';
-
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function openSheet() {
-    document.getElementById('add-sheet').classList.add('open');
-    document.getElementById('overlay').classList.add('active');
-}
-
-function closeSheet() {
-    document.getElementById('add-sheet').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-}
+let selectedCat = "Other";
+const quickCats = [
+    {n: "Food", i: "🍔"}, {n: "Gas", i: "⛽"}, 
+    {n: "Bills", i: "📄"}, {n: "Shop", i: "🛒"}, 
+    {n: "Work", i: "💼"}, {n: "Fun", i: "🎲"}
+];
 
 function setType(t) {
     mode = t;
-    document.getElementById('btn-exp').classList.remove('active');
-    document.getElementById('btn-inc').classList.remove('active');
-    if(t === 'expense') document.getElementById('btn-exp').classList.add('active');
-    else document.getElementById('btn-inc').classList.add('active');
+    document.getElementById('btn-exp').classList.toggle('active', t === 'expense');
+    document.getElementById('btn-inc').classList.toggle('active', t === 'income');
+}
+
+// Renders the tappable bubbles
+function renderTags() {
+    const container = document.getElementById('tag-container');
+    container.innerHTML = quickCats.map(c => `
+        <div class="tag ${selectedCat === c.n ? 'active' : ''}" onclick="selectTag('${c.n}')">
+            ${c.i} ${c.n}
+        </div>
+    `).join('');
+}
+
+function selectTag(name) {
+    selectedCat = name;
+    renderTags();
 }
 
 function saveNow() {
-    const d = document.getElementById('desc').value;
+    const d = document.getElementById('desc').value || selectedCat;
     const a = parseFloat(document.getElementById('amount').value);
-    const c = document.getElementById('cat-select').value;
+    const n = document.getElementById('note').value;
+    const dt = document.getElementById('entry-date').value || new Date().toLocaleDateString();
 
-    if(!d || isNaN(a)) return alert("Fill it out!");
+    if(isNaN(a)) return alert("Enter an amount!");
 
-    data.push({ d, a, mode, c, date: new Date().toLocaleDateString() });
+    data.push({ d, a, mode, c: selectedCat, note: n, date: dt });
     localStorage.setItem("logs", JSON.stringify(data));
     
+    // Reset Form
     document.getElementById('desc').value = "";
     document.getElementById('amount').value = "";
+    document.getElementById('note').value = "";
     closeSheet();
     refresh();
 }
 
-function refresh() {
-    const spent = data.filter(x => x.mode === 'expense').reduce((s, x) => s + x.a, 0);
-    const earned = data.filter(x => x.mode === 'income').reduce((s, x) => s + x.a, 0);
-    
-    document.getElementById('safe-spend').innerText = `$${(earned - spent).toLocaleString()}`;
-
-    // History
-    document.getElementById('history-list').innerHTML = data.map(x => `
-        <div class="item"><span>${x.d}</span><b>${x.mode==='expense'?'-':'+'}$${x.a}</b></div>
-    `).reverse().join('');
-
-    // Quick Bars
-    document.getElementById('bar-container').innerHTML = [20, 50, 10, 80, 30, 90, 40].map(h => `
-        <div class="bar"><div style="height:${h}%; background:#0A84FF; border-radius:4px;"></div></div>
-    `).join('');
-}
-
 window.onload = () => {
-    document.getElementById('cat-select').innerHTML = cats.map(c => `<option>${c}</option>`).join('');
+    document.getElementById('entry-date').valueAsDate = new Date();
+    renderTags();
     refresh();
 };
