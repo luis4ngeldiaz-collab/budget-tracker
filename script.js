@@ -7,7 +7,11 @@ function switchTab(tabId) {
   document.getElementById(tabId).classList.add('active');
 }
 
-window.onload = () => { renderCapInputs(); saveAndRefresh(); attachEventListeners(); };
+window.onload = () => { 
+  renderCapInputs(); 
+  saveAndRefresh(); 
+  attachEventListeners(); 
+};
 
 function attachEventListeners() {
   document.body.addEventListener("click", e => {
@@ -19,6 +23,7 @@ function attachEventListeners() {
   });
   document.getElementById("add-goal-btn").onclick = addGoal;
   document.getElementById("add-transaction-btn").onclick = addTransaction;
+  document.getElementById("search-transactions").oninput = searchTransactions;
 }
 
 function renderCapInputs() {
@@ -40,6 +45,21 @@ function saveCaps() {
   alert("Budget caps updated!");
 }
 
+function addGoal() {
+  const name = document.getElementById("goal-name").value;
+  const amount = parseFloat(document.getElementById("goal-amount").value);
+  if (!name || isNaN(amount)) return;
+  goals.push({ id: Date.now(), name, target: amount, progress: 0 });
+  saveAndRefresh();
+}
+
+function deleteGoal(id) {
+  if (confirm("Delete Goal?")) {
+    goals = goals.filter(g => g.id !== id);
+    saveAndRefresh();
+  }
+}
+
 function addTransaction() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
@@ -57,6 +77,16 @@ function addTransaction() {
   saveAndRefresh();
 }
 
+function deleteTransaction(index) {
+  const t = transactions[index];
+  if (t.goalId && t.type === "invest") {
+    const g = goals.find(g => g.id == t.goalId);
+    if (g) g.progress -= t.amount;
+  }
+  transactions.splice(index, 1);
+  saveAndRefresh();
+}
+
 function saveAndRefresh() {
   localStorage.setItem("goals", JSON.stringify(goals));
   localStorage.setItem("transactions", JSON.stringify(transactions));
@@ -69,11 +99,11 @@ function renderDashboard() {
   const inv = transactions.filter(t => t.type === 'invest').reduce((a, t) => a + t.amount, 0);
   
   const bankBalance = inc - exp - inv;
-  const billCaps = caps["Bills"] || 0;
+  const billCap = caps["Bills"] || 0;
   
   document.getElementById("balance").innerText = `$${bankBalance.toLocaleString()}`;
   document.getElementById("invested-val").innerText = `$${inv.toLocaleString()}`;
-  document.getElementById("safe-spend").innerText = `$${Math.max(0, bankBalance - billCaps).toLocaleString()}`;
+  document.getElementById("safe-spend").innerText = `$${Math.max(0, bankBalance - billCap).toLocaleString()}`;
 
   const max = Math.max(inc, exp, inv, 1);
   document.getElementById("bar-income").style.height = `${(inc / max) * 100}%`;
@@ -87,14 +117,25 @@ function renderDashboard() {
     const spent = catTotals[cat] || 0;
     const pct = Math.min((spent / cap) * 100, 100).toFixed(0);
     const color = pct >= 100 ? '#ff4444' : (pct > 80 ? '#ffa000' : '#4CAF50');
-    return `<div class="cat-row"><span>${cat}</span><div class="progress"><div class="progress-bar" style="width:${pct}%; background:${color}"></div></div><b>$${spent}/$${cap}</b></div>`;
+    return `
+      <div class="cat-row">
+        <span>${cat}</span>
+        <div class="progress"><div class="progress-bar" style="width:${pct}%; background:${color}"></div></div>
+        <b>$${spent}/$${cap}</b>
+      </div>`;
   }).join('');
 }
 
 function renderGoals() {
   document.getElementById("goal-list").innerHTML = goals.map(g => {
     const pct = Math.min((g.progress/g.target)*100, 100).toFixed(0);
-    return `<div class="card"><h4>${g.name}</h4><p>$${g.progress} / $${g.target}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div>`;
+    return `
+      <div class="card goal-item">
+        <h4>${g.name}</h4>
+        <p>$${g.progress} / $${g.target}</p>
+        <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+        <button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button>
+      </div>`;
   }).join('');
 }
 
@@ -102,9 +143,23 @@ function renderTransactions() {
   document.getElementById("transaction-list").innerHTML = transactions.map((t, i) => `
     <li class="t-item">
       <div><b>${t.desc}</b><br><small>${t.category} • ${t.date}</small></div>
-      <b class="${t.type}">$${t.amount}</b>
-      <button class="del-small" data-action="delete-transaction" data-index="${i}">×</button>
+      <div style="text-align:right">
+        <b class="${t.type}">$${t.amount}</b><br>
+        <button class="del-small" data-action="delete-transaction" data-index="${i}">×</button>
+      </div>
     </li>
   `).reverse().join('');
 }
-// (Helper functions for updateGoalSelect & addGoal remain similar to V7.1)
+
+function updateGoalSelect() {
+  let html = '<option value="">Link to Investment Goal?</option>';
+  goals.forEach(g => html += `<option value="${g.id}">${g.name}</option>`);
+  document.getElementById("goal-select").innerHTML = html;
+}
+
+function searchTransactions() {
+  const term = document.getElementById("search-transactions").value.toLowerCase();
+  document.querySelectorAll(".t-item").forEach(li => {
+    li.style.display = li.innerText.toLowerCase().includes(term) ? "flex" : "none";
+  });
+}
