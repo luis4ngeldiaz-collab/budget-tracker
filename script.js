@@ -113,3 +113,4 @@ function searchTransactions() {
   const term = document.getElementById("search-transactions").value.toLowerCase();
   document.querySelectorAll(".t-item").forEach(li => li.style.display = li.innerText.toLowerCase().includes(term) ? "flex" : "none");
 }
+ 
