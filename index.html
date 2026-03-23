@@ -2,73 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Budget Pro V10.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Budget Pro iOS</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header><h1>Budget Pro V10.0</h1></header>
+<div id="app-container">
+  <header>
+    <div class="status-bar-spacer"></div>
+    <h1 id="header-title">Summary</h1>
+  </header>
 
-<div id="screens">
-  <div id="dashboard" class="screen active">
-    <div class="card mini-card">
-      <small>Total Net Worth</small>
-      <h2 id="net-worth">$0</h2>
-      <div class="status-row">
-        <small>Cash: <span id="balance">$0</span></small>
-        <small>Invested: <span id="invested-val" style="color:#0072ff;">$0</span></small>
+  <div id="screens">
+    <div id="dashboard" class="screen active">
+      <div class="ios-card-large">
+        <small>TOTAL NET WORTH</small>
+        <h2 id="net-worth">$0.00</h2>
+        <div class="ios-stats-grid">
+          <div><label>CASH</label><span id="balance">$0</span></div>
+          <div><label>GROWTH</label><span id="invested-val" style="color:#007AFF;">$0</span></div>
+        </div>
       </div>
+
+      <div class="section-label">Active Goals</div>
+      <div id="active-goals-scroll" class="ios-scroll"></div>
+
+      <div class="section-label">Budget Health</div>
+      <div class="ios-list" id="category-bars"></div>
     </div>
-    
-    <div id="active-goals-scroll" class="horizontal-scroll">
-      </div>
 
-    <div class="card">
-      <h3>Safe to Spend: <span id="safe-spend" style="color:#4CAF50;">$0</span></h3>
-      <div id="category-bars"></div>
+    <div id="transactions" class="screen">
+      <div class="section-label">Recent Activity</div>
+      <div class="ios-list" id="transaction-list"></div>
     </div>
   </div>
 
-  <div id="investing" class="screen">
-    <div class="card">
-      <h3>New Visual Goal</h3>
-      <input id="goal-name" placeholder="What are we saving for?">
-      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
-      <input id="goal-image" placeholder="Image Link (Paste from Google/Pinterest)">
-      <button id="add-goal-btn">Plant This Goal</button>
+  <div id="action-sheet" class="ios-sheet">
+    <div class="sheet-handle"></div>
+    <h3>New Transaction</h3>
+    <input id="desc" placeholder="Merchant (e.g. Starbucks)">
+    <input id="amount" type="number" placeholder="$0.00">
+    <div class="ios-segment-control">
+      <button class="seg-btn active" onclick="setType('expense', this)">Out</button>
+      <button class="seg-btn" onclick="setType('income', this)">In</button>
+      <button class="seg-btn" onclick="setType('invest', this)">Grow</button>
     </div>
-    <div id="goal-list"></div>
+    <select id="category-select"></select>
+    <button id="add-transaction-btn" class="ios-main-btn">Done</button>
   </div>
 
-  <div id="transactions" class="screen">
-    <div class="card">
-      <h3>Log Activity</h3>
-      <input id="desc" placeholder="Merchant/Source" list="merchant-list">
-      <datalist id="merchant-list"></datalist>
-      <input id="amount" type="number" placeholder="Amount ($)">
-      <div class="split-row">
-        <select id="type-select">
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-          <option value="invest">Investment (Grow)</option>
-        </select>
-        <select id="category-select"></select>
-      </div>
-      <select id="goal-select" style="display:none; border-color:#0072ff;"></select>
-      <button id="add-transaction-btn">Confirm Log</button>
-    </div>
-    <div class="card">
-       <ul id="transaction-list"></ul>
-    </div>
-  </div>
+  <nav class="ios-tab-bar">
+    <button onclick="switchTab('dashboard')"><i>🏠</i><span>Summary</span></button>
+    <button onclick="toggleSheet()"><i>⊕</i><span>Add</span></button>
+    <button onclick="switchTab('transactions')"><i>🕒</i><span>History</span></button>
+  </nav>
 </div>
-
-<nav>
-  <button onclick="switchTab('dashboard')">Dash</button>
-  <button onclick="switchTab('investing')">Invest</button>
-  <button onclick="switchTab('transactions')">Logs</button>
-</nav>
 
 <script src="script.js"></script>
 </body>
