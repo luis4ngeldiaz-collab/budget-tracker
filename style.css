@@ -1,27 +1,31 @@
-:root { --ios-blue: #0A84FF; --ios-green: #30D158; --ios-card: #1C1C1E; }
 body { font-family: -apple-system, sans-serif; background: #000; color: #FFF; margin: 0; padding-bottom: 100px; }
+.screen { display: none; padding: 20px; }
+.active { display: block; }
 
-header { padding: 60px 20px 10px; }
-h1 { font-size: 34px; font-weight: 800; }
+.card-main { background: #1C1C1E; padding: 30px; border-radius: 20px; border: 1px solid #2C2C2E; margin-top: 40px; }
+.card-main h2 { font-size: 44px; color: #30D158; margin: 10px 0; }
+.label { font-size: 20px; font-weight: 700; margin: 30px 0 10px; color: #8E8E93; }
 
-.ios-card-large { background: var(--ios-card); margin: 15px; padding: 30px; border-radius: 24px; border: 1px solid #2C2C2E; }
-.ios-card-large h2 { font-size: 44px; margin: 10px 0; color: var(--ios-green); }
+.card-graph { background: #1C1C1E; height: 150px; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
+.bar-grid { display: flex; align-items: flex-end; justify-content: space-between; height: 100px; }
+.bar { flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
+.bar div { width: 12px; }
+.bar-labels { display: flex; justify-content: space-between; margin-top: 10px; font-size: 10px; color: #8E8E93; }
 
-.ios-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; height: 80%; background: #1C1C1E; border-radius: 24px 24px 0 0; transition: 0.4s; z-index: 1000; padding: 20px; box-sizing: border-box; }
-.ios-sheet.open { bottom: 0; }
-#overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); opacity: 0; pointer-events: none; z-index: 999; }
-#overlay.active { opacity: 1; pointer-events: auto; }
+.item { background: #1C1C1E; padding: 18px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; }
 
-.seg-btn { background: #2C2C2E; border: none; color: #8E8E93; padding: 12px; flex: 1; border-radius: 10px; font-weight: 700; margin: 0 5px; }
-.seg-btn.active { background: #636366; color: #FFF; }
-.ios-segment-control { display: flex; margin-bottom: 20px; }
+.bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; height: 75%; background: #1C1C1E; border-radius: 20px 20px 0 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; }
+.bottom-sheet.open { bottom: 0; }
+#overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1000; }
+#overlay.active { display: block; }
 
-.ios-input { width: 100%; background: #2C2C2E; border: none; color: #FFF; padding: 18px; border-radius: 14px; margin-bottom: 15px; font-size: 17px; box-sizing: border-box; }
-.ios-main-btn { width: 100%; background: var(--ios-blue); color: #FFF; padding: 20px; border-radius: 18px; font-size: 17px; font-weight: 700; border: none; }
+.type-picker { display: flex; gap: 10px; margin-bottom: 20px; }
+.choice { flex: 1; background: #2C2C2E; border: none; color: #FFF; padding: 12px; border-radius: 10px; }
+.choice.active { background: #636366; }
 
-.ios-tab-bar { position: fixed; bottom: 0; width: 100%; height: 90px; background: rgba(28,28,30,0.9); backdrop-filter: blur(20px); display: flex; border-top: 1px solid #2C2C2E; }
-.ios-tab-bar button { flex: 1; background: none; border: none; color: #8E8E93; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.add-tab { font-size: 30px; color: var(--ios-blue) !important; font-weight: bold; }
+.ios-in { width: 100%; background: #2C2C2E; border: none; color: #FFF; padding: 15px; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; }
+.save-btn { width: 100%; background: #0A84FF; color: #FFF; padding: 18px; border-radius: 15px; font-weight: 700; border: none; }
 
-.screen { display: none; } .screen.active { display: block; }
-.income { color: var(--ios-green); } .invest { color: var(--ios-blue); }
+.tab-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: #1C1C1E; display: flex; border-top: 1px solid #2C2C2E; }
+.tab-bar button { flex: 1; background: none; border: none; color: #8E8E93; font-weight: 600; }
+.plus-btn { font-size: 30px; color: #0A84FF !important; }
