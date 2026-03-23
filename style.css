@@ -1,58 +1,47 @@
-.amount-large {
-    font-size: 32px !important;
-    font-weight: 800;
-    text-align: center;
-    color: #30D158;
-    background: transparent !important;
-    border-bottom: 2px solid #2C2C2E !important;
-    border-radius: 0 !important;
-}
+/* Hard reset for the white screen issue */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { background-color: #000; color: #FFF; margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
 
-.label-small {
-    font-size: 12px;
-    font-weight: 700;
-    color: #8E8E93;
-    margin: 15px 0 8px;
-    text-transform: uppercase;
-}
+.dark-theme { background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
 
-.quick-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-}
+#app-wrapper { height: 100vh; display: flex; flex-direction: column; }
+header { padding: 50px 20px 10px; }
+h1 { font-size: 34px; margin: 0; font-weight: 800; }
 
-.tag {
-    background: #2C2C2E;
-    padding: 10px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #FFF;
-    border: 1px solid transparent;
-}
+#main-content { flex: 1; overflow-y: auto; padding: 0 20px 100px; }
+.screen { display: none; }
+.screen.active { display: block; }
 
-.tag.active {
-    background: #0A84FF22;
-    border-color: #0A84FF;
-    color: #0A84FF;
-}
+/* Cards */
+.main-card { background: #1C1C1E; padding: 25px; border-radius: 20px; border: 1px solid #2C2C2E; margin-top: 20px; }
+.main-card h2 { font-size: 48px; color: #30D158; margin: 10px 0; letter-spacing: -2px; }
+.label-heading { color: #8E8E93; font-weight: 700; margin: 25px 0 10px; text-transform: uppercase; font-size: 13px; }
 
-.ios-in-small {
-    width: 100%;
-    background: #2C2C2E;
-    border: none;
-    color: #FFF;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 15px;
-    box-sizing: border-box;
-}
+/* The Sheet (Pop-up) */
+#overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; z-index: 100; }
+#overlay.active { display: block; }
 
-.sheet-title {
-    text-align: center;
-    font-size: 17px;
-    margin-top: 0;
-}
+.sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #1C1C1E; border-radius: 25px 25px 0 0; transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); z-index: 101; padding-bottom: 40px; }
+.sheet.open { bottom: 0; }
+.sheet-handle { width: 40px; height: 5px; background: #3A3A3C; border-radius: 10px; margin: 15px auto; }
+.sheet-padding { padding: 0 20px 20px; }
+
+/* Inputs */
+.big-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid #2C2C2E; color: #30D158; font-size: 40px; font-weight: 800; text-align: center; margin-bottom: 20px; padding: 10px; }
+.std-input { width: 100%; background: #2C2C2E; border: none; padding: 18px; border-radius: 15px; color: #FFF; font-size: 17px; margin-bottom: 15px; }
+
+/* Tabs */
+.footer-nav { position: fixed; bottom: 0; width: 100%; height: 90px; background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #2C2C2E; padding-bottom: 20px; }
+.footer-nav button { flex: 1; background: none; border: none; color: #8E8E93; font-weight: 600; font-size: 12px; }
+.mid-btn { font-size: 32px !important; color: #0A84FF !important; }
+
+/* Toggles & Tags */
+.toggle-row { display: flex; background: #2C2C2E; border-radius: 12px; padding: 3px; margin-bottom: 20px; }
+.t-btn { flex: 1; border: none; background: none; color: #8E8E93; padding: 10px; border-radius: 10px; font-weight: 700; }
+.t-btn.active { background: #636366; color: #FFF; }
+.tag-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.tag { background: #2C2C2E; padding: 10px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+.tag.active { background: #0A84FF; color: white; }
+
+.action-btn { width: 100%; background: #0A84FF; color: #FFF; padding: 20px; border-radius: 18px; font-size: 18px; font-weight: 700; border: none; }
+.center { text-align: center; }
