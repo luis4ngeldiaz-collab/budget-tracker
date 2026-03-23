@@ -1,84 +1,64 @@
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-let categories = ["Food", "Bills", "Gas", "Personal", "Work"];
-let currentType = 'expense';
+let data = JSON.parse(localStorage.getItem("logs")) || [];
+let cats = ["Food", "Bills", "Gas", "Fun"];
+let mode = 'expense';
 
-// 1. Tab Switcher (Home vs History)
-function switchTab(tabId) {
-  console.log("Switching to: " + tabId);
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  document.getElementById('header-title').innerText = (tabId === 'dashboard') ? "My Money" : "History";
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
-// 2. Pop-up Toggle
-function toggleSheet() {
-  console.log("Toggling Sheet");
-  document.getElementById('action-sheet').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('active');
+function openSheet() {
+    document.getElementById('add-sheet').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
 }
 
-// 3. Selection Toggle (Spent/Earned/Saved)
-function pickType(type) {
-  console.log("Picked Type: " + type);
-  currentType = type;
-  // Remove 'active' from all, add to chosen one
-  document.getElementById('btn-exp').classList.remove('active');
-  document.getElementById('btn-inc').classList.remove('active');
-  document.getElementById('btn-inv').classList.remove('active');
-  
-  if(type === 'expense') document.getElementById('btn-exp').classList.add('active');
-  if(type === 'income') document.getElementById('btn-inc').classList.add('active');
-  if(type === 'invest') document.getElementById('btn-inv').classList.add('active');
+function closeSheet() {
+    document.getElementById('add-sheet').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
 }
 
-// 4. The SAVE Button
-function saveEntry() {
-  const desc = document.getElementById("desc").value;
-  const amt = parseFloat(document.getElementById("amount").value);
-  const cat = document.getElementById("category-select").value;
-
-  if(!desc || isNaN(amt)) {
-    alert("Please enter a name and amount!");
-    return;
-  }
-
-  const newEntry = { 
-    desc, 
-    amount: amt, 
-    type: currentType, 
-    category: cat, 
-    date: new Date().toLocaleDateString() 
-  };
-
-  transactions.push(newEntry);
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-  
-  // Clean up
-  document.getElementById("desc").value = "";
-  document.getElementById("amount").value = "";
-  toggleSheet();
-  updateUI();
+function setType(t) {
+    mode = t;
+    document.getElementById('btn-exp').classList.remove('active');
+    document.getElementById('btn-inc').classList.remove('active');
+    if(t === 'expense') document.getElementById('btn-exp').classList.add('active');
+    else document.getElementById('btn-inc').classList.add('active');
 }
 
-function updateUI() {
-  // Update numbers
-  const inc = transactions.filter(t => t.type === 'income').reduce((a, t) => a + t.amount, 0);
-  const exp = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + t.amount, 0);
-  const inv = transactions.filter(t => t.type === 'invest').reduce((a, t) => a + t.amount, 0);
-  
-  document.getElementById("safe-spend").innerText = `$${(inc - exp - inv).toLocaleString()}`;
+function saveNow() {
+    const d = document.getElementById('desc').value;
+    const a = parseFloat(document.getElementById('amount').value);
+    const c = document.getElementById('cat-select').value;
 
-  // Update History List
-  document.getElementById("transaction-list").innerHTML = transactions.map(t => `
-    <div class="ios-list-item">
-      <span>${t.desc}</span>
-      <b class="${t.type}">${t.type === 'expense' ? '-' : '+'}$${t.amount}</b>
-    </div>
-  `).reverse().join('');
+    if(!d || isNaN(a)) return alert("Fill it out!");
+
+    data.push({ d, a, mode, c, date: new Date().toLocaleDateString() });
+    localStorage.setItem("logs", JSON.stringify(data));
+    
+    document.getElementById('desc').value = "";
+    document.getElementById('amount').value = "";
+    closeSheet();
+    refresh();
+}
+
+function refresh() {
+    const spent = data.filter(x => x.mode === 'expense').reduce((s, x) => s + x.a, 0);
+    const earned = data.filter(x => x.mode === 'income').reduce((s, x) => s + x.a, 0);
+    
+    document.getElementById('safe-spend').innerText = `$${(earned - spent).toLocaleString()}`;
+
+    // History
+    document.getElementById('history-list').innerHTML = data.map(x => `
+        <div class="item"><span>${x.d}</span><b>${x.mode==='expense'?'-':'+'}$${x.a}</b></div>
+    `).reverse().join('');
+
+    // Quick Bars
+    document.getElementById('bar-container').innerHTML = [20, 50, 10, 80, 30, 90, 40].map(h => `
+        <div class="bar"><div style="height:${h}%; background:#0A84FF; border-radius:4px;"></div></div>
+    `).join('');
 }
 
 window.onload = () => {
-  const sel = document.getElementById("category-select");
-  sel.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
-  updateUI();
+    document.getElementById('cat-select').innerHTML = cats.map(c => `<option>${c}</option>`).join('');
+    refresh();
 };
