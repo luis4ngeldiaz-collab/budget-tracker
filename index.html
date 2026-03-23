@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Budget Pro V6.8</title>
+  <title>Budget Pro V7.1</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,37 +17,39 @@
     <div class="card mini-card">
       <small>Available Balance</small>
       <h2 id="balance">$0</h2>
+      <div class="status-row">
+        <small>Pending: <span id="pending-val">$0</span></small>
+        <small>Burn: <span id="burn-rate">$0</span>/day</small>
+      </div>
     </div>
     
     <div class="card">
-      <h3>Spending by Category</h3>
-      <div id="category-bars" class="category-stats">
-        </div>
+      <h3>Spending Breakdown</h3>
+      <div id="category-bars" class="category-stats"></div>
     </div>
 
     <div class="card">
       <h3>Cash Flow</h3>
       <div class="chart-container">
         <div class="chart-column">
-          <div id="bar-income" class="bar income-bar" style="height: 0%"></div>
-          <span>Income</span>
+          <div id="bar-income" class="bar income-bar"></div>
+          <span>In</span>
         </div>
         <div class="chart-column">
-          <div id="bar-expense" class="bar expense-bar" style="height: 0%"></div>
-          <span>Expense</span>
+          <div id="bar-expense" class="bar expense-bar"></div>
+          <span>Out</span>
         </div>
       </div>
     </div>
-
     <div id="dashboard-goals"></div>
   </div>
 
   <div id="goals" class="screen">
     <div class="card">
       <h3>New Goal</h3>
-      <input id="goal-name" placeholder="Name (e.g. Travel)">
-      <input id="goal-amount" type="number" placeholder="Target ($)">
-      <button id="add-goal-btn">Save Goal</button>
+      <input id="goal-name" placeholder="Goal Name">
+      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
+      <button id="add-goal-btn">Set Goal</button>
     </div>
     <div id="goal-list"></div>
   </div>
@@ -57,31 +59,42 @@
       <h3>Log Activity</h3>
       <input id="desc" placeholder="Description">
       <input id="amount" type="number" placeholder="Amount ($)">
-      <select id="type-select">
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-      </select>
+      <div class="split-row">
+        <select id="type-select">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select id="status-select">
+          <option value="cleared">Cleared</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
       <select id="category-select">
         <option value="General">General</option>
         <option value="Bills">Bills</option>
         <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
         <option value="Shopping">Shopping</option>
-        <option value="Fun">Fun</option>
+        <option value="Inventory">Inventory</option>
       </select>
       <select id="goal-select"></select>
       <button id="add-transaction-btn">Add Log</button>
     </div>
     <div class="card">
-       <input placeholder="Search..." id="search-transactions">
+       <input placeholder="Search transactions..." id="search-transactions">
        <ul id="transaction-list"></ul>
     </div>
   </div>
 
   <div id="settings" class="screen">
     <div class="card">
-      <h3>System</h3>
-      <button onclick="localStorage.clear(); location.reload();" style="background:#444;">Reset App</button>
+      <h3>Data Backup</h3>
+      <p style="font-size:11px; color:#888; margin-bottom:10px;">Copy this code to save your data, or paste a code to restore it.</p>
+      <textarea id="backup-box" placeholder="Your backup code will appear here..." readonly></textarea>
+      <button onclick="generateBackup()" style="background:#333; margin-bottom:5px;">Generate Backup Code</button>
+      <button onclick="restoreBackup()" style="background:#333;">Restore from Code</button>
+    </div>
+    <div class="card">
+      <button onclick="if(confirm('Wipe everything?')) {localStorage.clear(); location.reload();}" style="background:#f44336;">Reset App</button>
     </div>
   </div>
 </div>
