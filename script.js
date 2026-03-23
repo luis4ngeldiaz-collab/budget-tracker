@@ -1,6 +1,7 @@
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 let categories = JSON.parse(localStorage.getItem("categories")) || ["Food", "Bills", "Gas", "Personal"];
-let caps = JSON.parse(localStorage.getItem("caps")) || { Food: 400, Bills: 1500, Gas: 150 };
+let caps = JSON.parse(localStorage.getItem("caps")) || { Food: 400, Bills: 1500 };
+let goals = JSON.parse(localStorage.getItem("goals")) || [];
 let merchantMap = JSON.parse(localStorage.getItem("merchantMap")) || {};
 
 function switchTab(tabId) {
@@ -8,128 +9,93 @@ function switchTab(tabId) {
   document.getElementById(tabId).classList.add('active');
 }
 
-window.onload = () => { updateUI(); attachListeners(); };
+window.onload = () => { 
+  updateUI(); 
+  document.getElementById("type-select").onchange = (e) => {
+    document.getElementById("goal-select").style.display = (e.target.value === "invest") ? "block" : "none";
+  };
+};
 
-function attachListeners() {
-  document.getElementById("add-transaction-btn").onclick = addTransaction;
-  document.getElementById("search-transactions").oninput = searchTransactions;
-  document.getElementById("desc").onblur = autoSuggestCategory;
-}
-
-function autoSuggestCategory() {
-  const desc = document.getElementById("desc").value.trim();
-  if (merchantMap[desc]) {
-    document.getElementById("category-select").value = merchantMap[desc];
-  }
-}
-
-function addCategory() {
-  const name = document.getElementById("new-cat-name").value.trim();
-  if (name && !categories.includes(name)) {
-    categories.push(name);
-    caps[name] = 0;
-    document.getElementById("new-cat-name").value = "";
+document.getElementById("add-goal-btn").onclick = () => {
+  const name = document.getElementById("goal-name").value;
+  const target = parseFloat(document.getElementById("goal-amount").value);
+  const image = document.getElementById("goal-image").value || "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=200";
+  if(name && target) {
+    goals.push({ id: Date.now(), name, target, image, progress: 0 });
     updateUI();
   }
-}
+};
 
-function addTransaction() {
-  const desc = document.getElementById("desc").value.trim();
+document.getElementById("add-transaction-btn").onclick = () => {
+  const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const type = document.getElementById("type-select").value;
   const category = document.getElementById("category-select").value;
-  const note = document.getElementById("note").value.trim();
+  const goalId = document.getElementById("goal-select").value;
 
-  if (!desc || isNaN(amount)) return;
-
-  // Save merchant preference
-  merchantMap[desc] = category;
+  if(!desc || isNaN(amount)) return;
+  transactions.push({ desc, amount, type, category, goalId, date: new Date().toLocaleDateString() });
   
-  transactions.push({ 
-    desc, amount, type, category, note, 
-    date: new Date().toLocaleDateString(),
-    month: new Date().getMonth() 
-  });
-
-  // Clear inputs
-  document.getElementById("desc").value = "";
-  document.getElementById("amount").value = "";
-  document.getElementById("note").value = "";
+  if(type === "invest" && goalId) {
+    const g = goals.find(g => g.id == goalId);
+    if(g) g.progress += amount;
+  }
   updateUI();
-}
+};
 
 function updateUI() {
   localStorage.setItem("transactions", JSON.stringify(transactions));
-  localStorage.setItem("categories", JSON.stringify(categories));
-  localStorage.setItem("caps", JSON.stringify(caps));
-  localStorage.setItem("merchantMap", JSON.stringify(merchantMap));
+  localStorage.setItem("goals", JSON.stringify(goals));
   
-  // Update Merchant Datalist
-  document.getElementById("merchant-list").innerHTML = Object.keys(merchantMap).map(m => `<option value="${m}">`).join('');
-
-  // Update Category Select
   document.getElementById("category-select").innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
-
-  // Update Setup Lists
-  document.getElementById("custom-cat-list").innerHTML = categories.map(c => `
-    <div class="tag">${c} <span onclick="deleteCategory('${c}')">×</span></div>
-  `).join('');
-
-  document.getElementById("cap-inputs").innerHTML = categories.map(c => `
-    <div class="cap-input-row"><span>${c}</span><input type="number" onchange="updateCap('${c}', this.value)" value="${caps[c] || 0}"></div>
-  `).join('');
+  document.getElementById("goal-select").innerHTML = '<option value="">Link to Goal?</option>' + goals.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
 
   renderDashboard();
+  renderGoals();
   renderTransactions();
 }
 
-function updateCap(cat, val) { caps[cat] = parseFloat(val); localStorage.setItem("caps", JSON.stringify(caps)); renderDashboard(); }
-
 function renderDashboard() {
-  const currentMonth = new Date().getMonth();
-  const thisMonthT = transactions.filter(t => t.month === currentMonth);
-  
-  const inc = thisMonthT.reduce((a, t) => t.type === 'income' ? a + t.amount : a, 0);
-  const exp = thisMonthT.reduce((a, t) => t.type === 'expense' ? a + t.amount : a, 0);
-  const inv = thisMonthT.reduce((a, t) => t.type === 'invest' ? a + t.amount : a, 0);
-  
-  const bank = transactions.reduce((a, t) => t.type === 'income' ? a + t.amount : (t.type === 'expense' || t.type === 'invest' ? a - t.amount : a), 0);
-  
-  document.getElementById("balance").innerText = `$${bank.toLocaleString()}`;
-  document.getElementById("safe-spend").innerText = `$${Math.max(0, bank - (caps["Bills"] || 0)).toLocaleString()}`;
-  document.getElementById("net-flow").innerText = `$${(inc - exp).toLocaleString()}`;
-  document.getElementById("net-flow").style.color = (inc - exp) >= 0 ? "#4CAF50" : "#ff4444";
+  const inc = transactions.filter(t => t.type === 'income').reduce((a, t) => a + t.amount, 0);
+  const exp = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + t.amount, 0);
+  const inv = transactions.filter(t => t.type === 'invest').reduce((a, t) => a + t.amount, 0);
+  const cash = inc - exp - inv;
 
-  // Bars
-  const max = Math.max(inc, exp, 1);
-  document.getElementById("bar-income").style.height = `${(inc / max) * 100}%`;
-  document.getElementById("bar-expense").style.height = `${(exp / max) * 100}%`;
+  document.getElementById("balance").innerText = `$${cash.toLocaleString()}`;
+  document.getElementById("invested-val").innerText = `$${inv.toLocaleString()}`;
+  document.getElementById("net-worth").innerText = `$${(cash + inv).toLocaleString()}`;
+  document.getElementById("safe-spend").innerText = `$${Math.max(0, cash - (caps["Bills"] || 0)).toLocaleString()}`;
 
-  const catTotals = {};
-  thisMonthT.filter(t => t.type === 'expense').forEach(t => { catTotals[t.category] = (catTotals[t.category] || 0) + t.amount; });
-
-  document.getElementById("category-bars").innerHTML = categories.map(c => {
-    const spent = catTotals[c] || 0;
-    const cap = caps[c] || 1;
-    const pct = Math.min((spent / cap) * 100, 100);
-    return `<div class="cat-row"><span>${c}</span><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><b>$${spent}</b></div>`;
+  // Horizontal Scroll Goals
+  document.getElementById("active-goals-scroll").innerHTML = goals.map(g => {
+    const pct = Math.min((g.progress/g.target)*100, 100).toFixed(0);
+    return `
+      <div class="goal-card" style="background-image: linear-gradient(transparent, #000), url('${g.image}')">
+        <div class="goal-info">
+          <span>${g.name}</span>
+          <b>${pct}%</b>
+        </div>
+      </div>`;
   }).join('');
+}
+
+function renderGoals() {
+  document.getElementById("goal-list").innerHTML = goals.map((g, i) => `
+    <div class="card">
+      <div class="split-row">
+        <b>${g.name}</b>
+        <span>$${g.progress} / $${g.target}</span>
+      </div>
+      <button class="del-small" onclick="goals.splice(${i},1);updateUI();">Delete Goal</button>
+    </div>
+  `).join('');
 }
 
 function renderTransactions() {
   document.getElementById("transaction-list").innerHTML = transactions.map((t, i) => `
     <li class="t-item">
-      <div><b>${t.desc}</b><br><small>${t.category} • ${t.date}</small>
-      ${t.note ? `<br><i style="font-size:10px; color:#555;">${t.note}</i>` : ''}</div>
-      <div style="text-align:right">
-        <b class="${t.type}">$${t.amount}</b><br>
-        <button class="del-small" onclick="transactions.splice(${i},1);updateUI();">×</button>
-      </div>
+      <div><b>${t.desc}</b><br><small>${t.category}</small></div>
+      <b class="${t.type}">$${t.amount}</b>
     </li>
-  `).reverse().join('');
-}
-
-function searchTransactions() {
-  const term = document.getElementById("search-transactions").value.toLowerCase();
-  document.querySelectorAll(".t-item").forEach(li => li.style.display = li.innerText.toLowerCase().includes(term) ? "flex" : "none");
+  `).reverse().slice(0, 5).join('');
 }
