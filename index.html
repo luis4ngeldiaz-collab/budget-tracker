@@ -3,58 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Budget Pro iOS</title>
+  <title>Budget Pro Midnight</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="app-container">
   <header>
-    <div class="status-bar-spacer"></div>
     <h1 id="header-title">Summary</h1>
   </header>
 
   <div id="screens">
     <div id="dashboard" class="screen active">
       <div class="ios-card-large">
-        <small>TOTAL NET WORTH</small>
+        <small>NET WORTH</small>
         <h2 id="net-worth">$0.00</h2>
         <div class="ios-stats-grid">
           <div><label>CASH</label><span id="balance">$0</span></div>
-          <div><label>GROWTH</label><span id="invested-val" style="color:#007AFF;">$0</span></div>
+          <div><label>GROWTH</label><span id="invested-val" style="color:#0A84FF;">$0</span></div>
         </div>
       </div>
 
-      <div class="section-label">Active Goals</div>
-      <div id="active-goals-scroll" class="ios-scroll"></div>
-
       <div class="section-label">Budget Health</div>
-      <div class="ios-list" id="category-bars"></div>
+      <div id="category-bars" class="ios-list-container"></div>
     </div>
 
     <div id="transactions" class="screen">
-      <div class="section-label">Recent Activity</div>
-      <div class="ios-list" id="transaction-list"></div>
+      <div class="section-label">All Activity</div>
+      <div id="transaction-list" class="ios-list-container"></div>
     </div>
   </div>
 
+  <div id="overlay" onclick="toggleSheet()"></div>
+
   <div id="action-sheet" class="ios-sheet">
-    <div class="sheet-handle"></div>
-    <h3>New Transaction</h3>
-    <input id="desc" placeholder="Merchant (e.g. Starbucks)">
-    <input id="amount" type="number" placeholder="$0.00">
-    <div class="ios-segment-control">
-      <button class="seg-btn active" onclick="setType('expense', this)">Out</button>
-      <button class="seg-btn" onclick="setType('income', this)">In</button>
-      <button class="seg-btn" onclick="setType('invest', this)">Grow</button>
-    </div>
-    <select id="category-select"></select>
-    <button id="add-transaction-btn" class="ios-main-btn">Done</button>
+    <div class="sheet-handle" onclick="toggleSheet()"></div>
+    <div class="sheet-content">
+      <h3>New Log</h3>
+      <div class="input-group">
+        <input id="desc" placeholder="Merchant/Source">
+        <input id="amount" type="number" placeholder="$0.00">
+      </div>
+      
+      <div class="ios-segment-control">
+        <button class="seg-btn active" onclick="setType('expense', this)">Out</button>
+        <button class="seg-btn" onclick="setType('income', this)">In</button>
+        <button class="seg-btn" onclick="setType('invest', this)">Grow</button>
+      </div>
+
+      <select id="category-select"></select>
+      <button id="add-transaction-btn" class="ios-main-btn">Add Transaction</button>
+      <div style="height: 40px;"></div> </div>
   </div>
 
   <nav class="ios-tab-bar">
     <button onclick="switchTab('dashboard')"><i>🏠</i><span>Summary</span></button>
-    <button onclick="toggleSheet()"><i>⊕</i><span>Add</span></button>
+    <button onclick="toggleSheet()" class="add-tab"><i>+</i><span>Add</span></button>
     <button onclick="switchTab('transactions')"><i>🕒</i><span>History</span></button>
   </nav>
 </div>
