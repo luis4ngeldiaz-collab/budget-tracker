@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Budget Pro Simple</title>
+  <title>Budget Pro V14</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,25 +15,42 @@
 
   <div id="screens">
     <div id="dashboard" class="screen active">
-      <div class="ios-card-large">
-        <small>EVERYTHING I HAVE</small>
-        <h2 id="net-worth">$0.00</h2>
-        <div class="ios-stats-grid">
-          <div class="stat-item"><label>CASH IN BANK</label><span id="balance">$0</span></div>
-          <div class="stat-item"><label>SAVED / GROWING</label><span id="invested-val" style="color:#0A84FF;">$0</span></div>
+      <div class="ios-card-large safe-card">
+        <small>SAFE TO SPEND TODAY</small>
+        <h2 id="safe-spend">$0.00</h2>
+        <div class="ios-progress-container main-progress">
+            <div id="total-progress-bar" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="ios-card-mini-row">
+        <div class="mini-card">
+            <small>LEFT IN BANK</small>
+            <b id="balance">$0</b>
+        </div>
+        <div class="mini-card">
+            <small>GROWING</small>
+            <b id="invested-val" style="color:#0A84FF;">$0</b>
         </div>
       </div>
       
       <div class="section-header">
-        <span class="section-label">Spending Limits</span>
+        <span class="section-label">Monthly Limits</span>
+        <button class="edit-link" onclick="switchTab('setup')">Set Limits</button>
       </div>
-      <div id="category-bars" class="ios-list-container"></div>
+      <div id="category-bars" class="ios-list-container no-bg"></div>
+    </div>
+
+    <div id="setup" class="screen">
+      <div class="section-header"><span class="section-label">Set Your Limits</span></div>
+      <div class="ios-list-container" id="limit-inputs"></div>
+      <div style="padding: 20px;">
+          <button onclick="switchTab('dashboard')" class="ios-main-btn">Save Budget</button>
+      </div>
     </div>
 
     <div id="transactions" class="screen">
-      <div class="section-header">
-        <span class="section-label">Recent Activity</span>
-      </div>
+      <div class="section-header"><span class="section-label">History</span></div>
       <div id="transaction-list" class="ios-list-container no-bg"></div>
     </div>
   </div>
@@ -41,37 +58,26 @@
   <div id="overlay" onclick="toggleSheet()"></div>
 
   <div id="action-sheet" class="ios-sheet">
-    <div class="sheet-handle-container" id="sheet-handle-zone">
-      <div class="sheet-handle"></div>
-    </div>
+    <div class="sheet-handle-container" id="sheet-handle-zone"><div class="sheet-handle"></div></div>
     <div class="sheet-content">
-      <h3 class="sheet-title">Add New Activity</h3>
-      
+      <h3 class="sheet-title">New Entry</h3>
       <div class="ios-segment-control">
-        <button type="button" class="seg-btn active" data-type="expense">Spent Money</button>
-        <button type="button" class="seg-btn" data-type="income">Got Paid</button>
-        <button type="button" class="seg-btn" data-type="invest">Put Aside</button>
+        <button class="seg-btn active" data-type="expense">Spent</button>
+        <button class="seg-btn" data-type="income">Income</button>
+        <button class="seg-btn" data-type="invest">Saved</button>
       </div>
-
       <div class="input-stack">
-        <input id="desc" placeholder="Where? (Store or Person name)" class="ios-input">
-        <div class="money-input-wrapper">
-            <span class="currency-symbol">$</span>
-            <input id="amount" type="number" placeholder="0.00" class="ios-input amount-input">
-        </div>
+        <input id="desc" placeholder="Where? (Store name)" class="ios-input">
+        <input id="amount" type="number" placeholder="$0.00" class="ios-input amount-input">
         <select id="category-select" class="ios-input"></select>
       </div>
-
       <button id="add-transaction-btn" class="ios-main-btn">Add to List</button>
-      <div style="height: 80px;"></div>
     </div>
   </div>
 
   <nav class="ios-tab-bar">
     <button onclick="switchTab('dashboard')"><div class="nav-icon home"></div><span>Home</span></button>
-    <div class="add-btn-container" onclick="toggleSheet()">
-        <div class="plus-circle"></div>
-    </div>
+    <div class="add-btn-container" onclick="toggleSheet()"><div class="plus-circle"></div></div>
     <button onclick="switchTab('transactions')"><div class="nav-icon clock"></div><span>History</span></button>
   </nav>
 </div>
