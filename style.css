@@ -1,48 +1,32 @@
-body { 
-  font-family: -apple-system, sans-serif; 
-  margin: 0; 
-  padding-bottom: 90px; 
-  background: #121212; 
-  color: white; 
-  touch-action: manipulation; 
-}
-
-header { padding: 25px; text-align: center; background: #1E1E1E; border-bottom: 2px solid #4CAF50; }
-
-.card { background: #1E1E1E; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-.main-balance { text-align: center; border: 1px solid #333; }
-.main-balance #balance { font-size: 40px; font-weight: bold; color: #4CAF50; margin: 10px 0; }
-.main-balance small { color: #888; font-size: 14px; }
-
-input, select, button { 
-  width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; border: 1px solid #333; 
-  background: #2A2A2A; color: white; box-sizing: border-box; font-size: 16px;
-}
-
-button { background: #4CAF50; font-weight: bold; cursor: pointer; border: none; }
-button:active { background: #45a049; }
-
-.button-group { display: flex; gap: 10px; margin-top: 10px; }
-.button-group button { flex: 1; font-size: 12px; padding: 10px; }
-
-.edit-btn { background: #ffa000; }
-.delete-btn { background: #f44336; }
-
-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #1E1E1E; padding: 10px 0; border-top: 1px solid #333; }
-nav button { flex: 1; background: transparent; font-size: 12px; color: #888; border: none; }
-
-.progress { height: 12px; background: #333; border-radius: 6px; margin: 12px 0; overflow: hidden; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, #4CAF50, #0072ff); transition: width 0.5s; }
-
-.chart-container { display: flex; justify-content: center; align-items: flex-end; height: 100px; gap: 40px; margin: 15px 0; }
-.chart-column { display: flex; flex-direction: column; align-items: center; height: 100%; width: 40px; }
-.bar { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.5s; }
+body { font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; background: #000; color: #fff; touch-action: manipulation; }
+header { padding: 12px; text-align: center; border-bottom: 1px solid #1a1a1a; }
+h1 { font-size: 14px; color: #666; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+.card { background: #0a0a0a; border: 1px solid #1a1a1a; margin: 8px; padding: 12px; border-radius: 10px; }
+.mini-card h2 { margin: 2px 0; font-size: 28px; color: #4CAF50; text-align: center; }
+.mini-card small { color: #555; text-transform: uppercase; font-size: 9px; }
+.status-row { display: flex; justify-content: space-around; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
+.split-row { display: flex; gap: 8px; }
+input, select, button, textarea { width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: 1px solid #222; background: #111; color: #fff; font-size: 13px; box-sizing: border-box; }
+textarea { height: 60px; font-size: 10px; color: #444; resize: none; }
+button { background: #4CAF50; font-weight: bold; border: none; cursor: pointer; }
+button:active { opacity: 0.7; }
+nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; border-top: 1px solid #1a1a1a; padding: 5px 0; }
+nav button { flex: 1; background: transparent; color: #444; font-size: 10px; }
+.progress { height: 4px; background: #1a1a1a; border-radius: 2px; flex: 1; margin: 0 8px; overflow: hidden; }
+.progress-bar { height: 100%; background: #4CAF50; transition: width 0.3s; }
+.chart-container { display: flex; justify-content: space-around; align-items: flex-end; height: 50px; }
+.chart-column { display: flex; flex-direction: column; align-items: center; width: 35px; }
+.bar { width: 100%; border-radius: 2px 2px 0 0; min-height: 1px; transition: height 0.4s; }
 .income-bar { background: #4CAF50; }
-.expense-bar { background: #f44336; }
-
-.transaction-item { display: flex; justify-content: space-between; align-items: center; background: #252525; margin: 10px 0; padding: 15px; border-radius: 12px; }
-.income { color: #4CAF50; font-weight: bold; }
-.expense { color: #f44336; font-weight: bold; }
-
+.expense-bar { background: #ff4444; }
+.chart-column span { font-size: 8px; color: #333; margin-top: 4px; }
+.cat-row { display: flex; align-items: center; font-size: 10px; margin-bottom: 6px; }
+.cat-row span { width: 55px; color: #555; }
+.t-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #111; }
+.t-item small { color: #333; font-size: 9px; }
+.income { color: #4CAF50; }
+.expense { color: #ff4444; }
+.clear-btn { width: auto; padding: 3px 8px; font-size: 9px; background: #ffa000; }
+.del-small { width: 22px; padding: 3px; background: #1a1a1a; font-size: 9px; color: #444; }
 .screen { display: none; }
 .screen.active { display: block; }
