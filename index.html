@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Budget Pro V7.2</title>
+  <title>Budget Pro V8.0</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>Budget Pro</h1>
-</header>
+<header><h1>Budget Pro V8.0</h1></header>
 
 <div id="screens">
   <div id="dashboard" class="screen active">
@@ -19,64 +17,49 @@
       <h2 id="safe-spend">$0</h2>
       <div class="status-row">
         <small>Bank: <span id="balance">$0</span></small>
-        <small>Invested: <span id="invested-val" style="color:#0072ff;">$0</span></small>
+        <small>Growth: <span id="invested-val">$0</span></small>
       </div>
     </div>
-    
     <div class="card">
-      <h3>Budget Caps (Pruning)</h3>
-      <div id="category-bars" class="category-stats"></div>
-    </div>
-
-    <div class="card">
-      <h3>Cash Flow</h3>
-      <div class="chart-container">
-        <div class="chart-column"><div id="bar-income" class="bar income-bar"></div><span>In</span></div>
-        <div class="chart-column"><div id="bar-expense" class="bar expense-bar"></div><span>Out</span></div>
-        <div class="chart-column"><div id="bar-invest" class="bar invest-bar"></div><span>Grow</span></div>
-      </div>
+      <h3>Budget Health</h3>
+      <div id="category-bars"></div>
     </div>
   </div>
 
-  <div id="goals" class="screen">
+  <div id="setup" class="screen">
     <div class="card">
-      <h3>Category Needs (Monthly Caps)</h3>
-      <p style="font-size:10px; color:#666; margin-bottom:10px;">Set monthly limits for your pruning tool.</p>
-      <div id="cap-inputs"></div>
-      <button onclick="saveCaps()" style="background:#333; margin-top:10px;">Update Budget Caps</button>
+      <h3>Manage Categories</h3>
+      <div class="split-row">
+        <input id="new-cat-name" placeholder="New Category (e.g. Gas)">
+        <button onclick="addCategory()" style="width:80px;">Add</button>
+      </div>
+      <div id="custom-cat-list" class="tag-container"></div>
     </div>
     <div class="card">
-      <h3>Savings Goals</h3>
-      <input id="goal-name" placeholder="Goal Name (e.g. Car)">
-      <input id="goal-amount" type="number" placeholder="Target Amount ($)">
-      <button id="add-goal-btn">Set Goal</button>
-      <div id="goal-list"></div>
+      <h3>Monthly Caps</h3>
+      <div id="cap-inputs"></div>
+      <button onclick="saveCaps()">Save All Limits</button>
     </div>
   </div>
 
   <div id="transactions" class="screen">
     <div class="card">
-      <h3>Log Activity</h3>
+      <h3>Add Transaction</h3>
       <input id="desc" placeholder="Description">
       <input id="amount" type="number" placeholder="Amount ($)">
       <div class="split-row">
         <select id="type-select">
-          <option value="income">Income (Job)</option>
-          <option value="expense">Expense (Bill)</option>
-          <option value="invest">Investment (Grow)</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+          <option value="invest">Investment</option>
         </select>
-        <select id="category-select">
-          <option value="Food">Food</option>
-          <option value="Bills">Bills</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Personal">Personal</option>
-        </select>
+        <select id="category-select"></select>
       </div>
-      <select id="goal-select"></select>
-      <button id="add-transaction-btn">Add Log</button>
+      <label style="font-size:10px; color:#666;"><input type="checkbox" id="is-recurring"> Repeat Monthly?</label>
+      <button id="add-transaction-btn">Confirm Log</button>
     </div>
     <div class="card">
-       <input placeholder="Search transactions..." id="search-transactions">
+       <input placeholder="Search..." id="search-transactions">
        <ul id="transaction-list"></ul>
     </div>
   </div>
@@ -84,10 +67,11 @@
 
 <nav>
   <button onclick="switchTab('dashboard')">Dash</button>
-  <button onclick="switchTab('goals')">Setup</button>
+  <button onclick="switchTab('setup')">Custom</button>
   <button onclick="switchTab('transactions')">Logs</button>
 </nav>
 
 <script src="script.js"></script>
 </body>
 </html>
+
