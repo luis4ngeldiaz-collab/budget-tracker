@@ -6,21 +6,15 @@ function switchTab(tabId) {
   document.getElementById(tabId).classList.add('active');
 }
 
-window.onload = function() {
-  saveAndRefresh();
-  attachEventListeners();
-};
+window.onload = () => { saveAndRefresh(); attachEventListeners(); };
 
 function attachEventListeners() {
   document.body.addEventListener("click", e => {
     const btn = e.target.closest('button');
     if (!btn || !btn.dataset.action) return;
-    const action = btn.dataset.action;
-    const id = parseInt(btn.dataset.id);
-    const index = parseInt(btn.dataset.index);
-    if (action === "delete-goal") deleteGoal(id);
-    if (action === "edit-goal") editGoalPrompt(id);
-    if (action === "delete-transaction") deleteTransaction(index);
+    const { action, id, index } = btn.dataset;
+    if (action === "delete-goal") deleteGoal(parseInt(id));
+    if (action === "delete-transaction") deleteTransaction(parseInt(index));
   });
 
   document.getElementById("add-goal-btn").onclick = addGoal;
@@ -31,53 +25,35 @@ function attachEventListeners() {
 function addGoal() {
   const name = document.getElementById("goal-name").value;
   const amount = parseFloat(document.getElementById("goal-amount").value);
-  const priority = document.getElementById("goal-priority").value;
-  if (!name || isNaN(amount)) return alert("Please enter the goal name and amount.");
-  goals.push({ id: Date.now(), name, target: amount, progress: 0, priority });
-  document.getElementById("goal-name").value = "";
-  document.getElementById("goal-amount").value = "";
+  if (!name || isNaN(amount)) return;
+  goals.push({ id: Date.now(), name, target: amount, progress: 0 });
   saveAndRefresh();
 }
 
 function deleteGoal(id) {
-  if (confirm("Delete this goal?")) {
-    goals = goals.filter(g => g.id !== id);
-    saveAndRefresh();
-  }
-}
-
-function editGoalPrompt(id) {
-  const g = goals.find(g => g.id === id);
-  const newName = prompt("Goal name:", g.name);
-  const newAmount = parseFloat(prompt("Goal amount:", g.target));
-  if (newName && !isNaN(newAmount)) {
-    g.name = newName; g.target = newAmount;
-    saveAndRefresh();
-  }
+  if (confirm("Delete?")) { goals = goals.filter(g => g.id !== id); saveAndRefresh(); }
 }
 
 function addTransaction() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
-  const category = document.getElementById("category").value;
+  const type = document.getElementById("type-select").value;
+  const category = document.getElementById("category-select").value;
   const goalId = document.getElementById("goal-select").value;
-  if (!desc || isNaN(amount)) return alert("Enter amount and what it's for.");
-  const t = { desc, amount, category, goalId, date: new Date().toLocaleDateString() };
-  transactions.push(t);
-  if (goalId && category === "income") {
-    const goal = goals.find(g => g.id == goalId);
-    if (goal) goal.progress += amount;
+  if (!desc || isNaN(amount)) return;
+  transactions.push({ desc, amount, type, category, goalId, date: new Date().toLocaleDateString() });
+  if (goalId && type === "income") {
+    const g = goals.find(g => g.id == goalId);
+    if (g) g.progress += amount;
   }
-  document.getElementById("desc").value = "";
-  document.getElementById("amount").value = "";
   saveAndRefresh();
 }
 
 function deleteTransaction(index) {
   const t = transactions[index];
-  if (t.goalId && t.category === "income") {
-    const goal = goals.find(g => g.id == t.goalId);
-    if (goal) goal.progress -= t.amount;
+  if (t.goalId && t.type === "income") {
+    const g = goals.find(g => g.id == t.goalId);
+    if (g) g.progress -= t.amount;
   }
   transactions.splice(index, 1);
   saveAndRefresh();
@@ -86,63 +62,54 @@ function deleteTransaction(index) {
 function saveAndRefresh() {
   localStorage.setItem("goals", JSON.stringify(goals));
   localStorage.setItem("transactions", JSON.stringify(transactions));
-  renderDashboard();
-  renderGoals();
-  renderTransactions();
-  updateGoalSelect();
+  renderDashboard(); renderGoals(); renderTransactions(); updateGoalSelect();
 }
 
 function renderDashboard() {
-  const inc = transactions.filter(t => t.category === 'income').reduce((a, t) => a + t.amount, 0);
-  const exp = transactions.filter(t => t.category === 'expense').reduce((a, t) => a + t.amount, 0);
-  const total = inc - exp;
-  document.getElementById("balance").innerText = `$${total.toLocaleString()}`;
+  const inc = transactions.filter(t => t.type === 'income').reduce((a, t) => a + t.amount, 0);
+  const exp = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + t.amount, 0);
+  document.getElementById("balance").innerText = `$${(inc - exp).toLocaleString()}`;
   
+  // Income/Expense Bars
   const max = Math.max(inc, exp, 1);
   document.getElementById("bar-income").style.height = `${(inc / max) * 100}%`;
   document.getElementById("bar-expense").style.height = `${(exp / max) * 100}%`;
 
-  if (goals.length > 0) {
-    const g = goals[0];
-    const rem = g.target - g.progress;
-    const pct = Math.min((g.progress / g.target) * 100, 100).toFixed(0);
-    document.getElementById("savings-pct").innerText = `${pct}% of ${g.name} saved`;
-    document.getElementById("daily-target").innerText = `$${Math.max(0, (rem / 14)).toFixed(2)} / day for 2 wks`;
-  } else {
-    document.getElementById("savings-pct").innerText = "No goals set yet";
-    document.getElementById("daily-target").innerText = "$0";
-  }
+  // Category Breakdown
+  const catTotals = {};
+  transactions.filter(t => t.type === 'expense').forEach(t => {
+    catTotals[t.category] = (catTotals[t.category] || 0) + t.amount;
+  });
+
+  const catContainer = document.getElementById("category-bars");
+  catContainer.innerHTML = Object.entries(catTotals).map(([cat, amt]) => {
+    const pct = Math.min((amt / exp) * 100, 100).toFixed(0);
+    return `<div class="cat-row"><span>${cat}</span><div class="progress"><div class="progress-bar" style="width:${pct}%; background:#555;"></div></div><b>$${amt}</b></div>`;
+  }).join('');
 }
 
 function renderGoals() {
-  const containers = [document.getElementById("goal-list"), document.getElementById("dashboard-goals")];
-  let html = "";
-  goals.forEach(g => {
-    const pct = Math.min((g.progress / g.target) * 100, 100).toFixed(0);
-    html += `<div class="card"><h3>${g.name}</h3><p>$${g.progress.toLocaleString()} / $${g.target.toLocaleString()}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="button-group"><button class="edit-btn" data-action="edit-goal" data-id="${g.id}">Edit</button><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div></div>`;
-  });
-  containers.forEach(c => c.innerHTML = html);
+  const html = goals.map(g => {
+    const pct = Math.min((g.progress/g.target)*100, 100).toFixed(0);
+    return `<div class="card"><h4>${g.name}</h4><p>$${g.progress} / $${g.target}</p><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><button class="delete-btn" data-action="delete-goal" data-id="${g.id}">Delete</button></div>`;
+  }).join('');
+  document.getElementById("goal-list").innerHTML = html;
+  document.getElementById("dashboard-goals").innerHTML = html;
 }
 
 function renderTransactions() {
-  const ul = document.getElementById("transaction-list");
-  let html = "";
-  transactions.forEach((t, i) => {
-    html += `<li class="transaction-item"><div><strong>${t.desc}</strong><br><small>${t.date}</small></div><div class="${t.category}">${t.category==='income'?'+':'-'}$${t.amount}</div><button class="delete-btn" data-action="delete-transaction" data-index="${i}">Delete</button></li>`;
-  });
-  ul.innerHTML = html;
+  document.getElementById("transaction-list").innerHTML = transactions.map((t, i) => `
+    <li class="t-item"><div><b>${t.desc}</b><br><small>${t.category} • ${t.date}</small></div><b class="${t.type}">$${t.amount}</b><button data-action="delete-transaction" data-index="${i}">×</button></li>
+  `).reverse().join(''); // Reversed so newest is at the top
 }
 
 function updateGoalSelect() {
-  const select = document.getElementById("goal-select");
-  let html = '<option value="">Put toward a goal?</option>';
+  let html = '<option value="">Link to Goal?</option>';
   goals.forEach(g => html += `<option value="${g.id}">${g.name}</option>`);
-  select.innerHTML = html;
+  document.getElementById("goal-select").innerHTML = html;
 }
 
 function searchTransactions() {
   const term = document.getElementById("search-transactions").value.toLowerCase();
-  document.querySelectorAll("#transaction-list li").forEach(li => {
-    li.style.display = li.innerText.toLowerCase().includes(term) ? "flex" : "none";
-  });
+  document.querySelectorAll(".t-item").forEach(li => li.style.display = li.innerText.toLowerCase().includes(term) ? "flex" : "none");
 }
